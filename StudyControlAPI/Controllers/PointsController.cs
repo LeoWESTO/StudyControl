@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SCLib.Models;
+using StudyControlAPI.Models;
 using StudyControlAPI.Data;
 
 namespace StudyControlAPI.Controllers
@@ -16,7 +16,6 @@ namespace StudyControlAPI.Controllers
     public class PointsController : ControllerBase
     {
         private readonly DataContext _context;
-
         public PointsController(DataContext context)
         {
             _context = context;

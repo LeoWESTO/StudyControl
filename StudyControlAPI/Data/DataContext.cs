@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SCLib.Models;
+using StudyControlAPI.Models;
 
 namespace StudyControlAPI.Data
 {

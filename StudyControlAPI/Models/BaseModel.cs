@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 
-namespace SCLib.Models
+namespace StudyControlAPI.Models
 {
     public class BaseModel
     {
