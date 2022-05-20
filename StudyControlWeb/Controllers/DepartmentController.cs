@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace StudyControlWeb.Controllers
 {
-    [Authorize(Roles = "Faculty")]
-    public class FacultyController : Controller
+    [Authorize(Roles = "Department")]
+    public class DepartmentController : Controller
     {
         public IActionResult Index()
         {

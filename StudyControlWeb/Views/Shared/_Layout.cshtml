@@ -19,12 +19,13 @@
                     </div>
                 </a>
             </div>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+            <div class="container justify-content-center">
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <ul class="navbar-nav justify-content-end">
+                    <ul class="navbar-nav form-inline text">
+                        <p class="lead m-1">@User.Identity.Name</p>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" href="~/Account/Logout">ВЫХОД</a>
+                            <a class="nav-link text-dark" href="~/Account/Logout">Выйти</a>
                         </li>
                     </ul>
                 }
@@ -32,7 +33,7 @@
                 {
                     <ul class="navbar-nav justify-content-end">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" href="~/Account/Login">ВХОД</a>
+                            <a class="nav-link text-dark" href="~/Account/Login">Войти</a>
                         </li>
                     </ul>
                 }

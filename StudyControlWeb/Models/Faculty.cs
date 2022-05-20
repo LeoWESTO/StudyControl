@@ -9,9 +9,10 @@ namespace StudyControlWeb.Models
     public class Faculty : BaseModel 
     {
         public string Title { get; set; }
+        public string Password { get; set; }
         public string DeanName { get; set; }
         public string DeanSurname { get; set; }
         public string DeanFathername { get; set; }
-        public string Password { get; set; }
+        
     }
 }

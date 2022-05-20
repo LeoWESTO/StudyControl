@@ -8,6 +8,7 @@ namespace StudyControlWeb.Models
     public class Department : BaseModel 
     {
         public string Title { get; set; }
+        public string Password { get; set; }
         [JsonIgnore]
         public Faculty Faculty { get; set; }
         public int? FacultyId { get; set; }

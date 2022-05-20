@@ -12,6 +12,7 @@ builder.Services
     .AddCookie(options =>
     {
         options.LoginPath = new PathString("/Account/Login");
+        options.AccessDeniedPath = new PathString("/Account/Login");
     });
 
 var app = builder.Build();

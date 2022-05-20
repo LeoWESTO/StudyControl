@@ -10,6 +10,7 @@ namespace StudyControlWeb.Models
         public string Name { get; set;}
         public string Surname { get; set;}
         public string Fathername { get; set;}
+        public string Password { get; set;}
         [JsonIgnore]
         public Department Department { get; set;}
         public int? DepartmentId { get; set; }

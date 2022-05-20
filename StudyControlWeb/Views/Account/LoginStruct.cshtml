@@ -1,0 +1,24 @@
+﻿@model StudyControlWeb.ViewModels.LoginStructModel
+
+<div class="text-center text-muted">
+    <h2>Вход в структурное подразделение</h2>
+    <form asp-action="LoginStruct" asp-controller="Account" asp-anti-forgery="true">
+        <div class="validation" asp-validation-summary="All"></div>
+        <div>
+            <div class="form-group m-3">
+                <label>Название структурного подразделения</label>
+                <select asp-for="Title" asp-items="@ViewBag.Titles">
+
+                </select>
+            </div>
+            <div class="form-inline m-3">
+                <label asp-for="Password">Пароль</label>
+                <input asp-for="Password" type="password" class="form-control" />
+                <span asp-validation-for="Password" />
+            </div>
+            <div class="form-group m-3">
+                <input type="submit" value="Войти" class="btn btn-outline-dark" />
+            </div>
+        </div>
+</form>
+</div>
