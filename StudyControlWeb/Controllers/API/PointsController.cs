@@ -24,13 +24,13 @@ namespace StudyControlWeb.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Points>>> GetPoints()
         {
-            return await _context.Points.ToListAsync();
+            return await _context.Point.ToListAsync();
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Points>> GetPoints(int id)
         {
-            var points = await _context.Points.FindAsync(id);
+            var points = await _context.Point.FindAsync(id);
 
             if (points == null)
             {
@@ -72,7 +72,7 @@ namespace StudyControlWeb.Controllers
         [HttpPost]
         public async Task<ActionResult<Points>> PostPoints(Points points)
         {
-            _context.Points.Add(points);
+            _context.Point.Add(points);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetPoints", new { id = points.Id }, points);
@@ -81,13 +81,13 @@ namespace StudyControlWeb.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePoints(int id)
         {
-            var points = await _context.Points.FindAsync(id);
+            var points = await _context.Point.FindAsync(id);
             if (points == null)
             {
                 return NotFound();
             }
 
-            _context.Points.Remove(points);
+            _context.Point.Remove(points);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -95,7 +95,7 @@ namespace StudyControlWeb.Controllers
 
         private bool PointsExists(int id)
         {
-            return _context.Points.Any(e => e.Id == id);
+            return _context.Point.Any(e => e.Id == id);
         }
     }
 }

@@ -25,13 +25,13 @@ namespace StudyControlWeb.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Subject>>> GetSubjects()
         {
-            return await _context.Subjects.ToListAsync();
+            return await _context.Subject.ToListAsync();
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Subject>> GetSubject(int id)
         {
-            var subject = await _context.Subjects.FindAsync(id);
+            var subject = await _context.Subject.FindAsync(id);
 
             if (subject == null)
             {
@@ -73,7 +73,7 @@ namespace StudyControlWeb.Controllers
         [HttpPost]
         public async Task<ActionResult<Subject>> PostSubject(Subject subject)
         {
-            _context.Subjects.Add(subject);
+            _context.Subject.Add(subject);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetSubject", new { id = subject.Id }, subject);
@@ -82,13 +82,13 @@ namespace StudyControlWeb.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSubject(int id)
         {
-            var subject = await _context.Subjects.FindAsync(id);
+            var subject = await _context.Subject.FindAsync(id);
             if (subject == null)
             {
                 return NotFound();
             }
 
-            _context.Subjects.Remove(subject);
+            _context.Subject.Remove(subject);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -96,7 +96,7 @@ namespace StudyControlWeb.Controllers
 
         private bool SubjectExists(int id)
         {
-            return _context.Subjects.Any(e => e.Id == id);
+            return _context.Subject.Any(e => e.Id == id);
         }
     }
 }

@@ -11,8 +11,7 @@ namespace StudyControlWeb.Models
         [JsonIgnore]
         public Department Department { get; set; }
         public int? DepartmentId { get; set; }
-        [JsonIgnore]
-        public Student Headman { get; set; }
-        public int? HeadmanId { get; set; }
+        //public Student Headman { get; set; }
+        //public int? HeadmanId { get; set; }
     }
 }

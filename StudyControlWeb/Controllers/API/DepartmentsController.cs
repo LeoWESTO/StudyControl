@@ -24,12 +24,12 @@ namespace StudyControlWeb.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Department>>> GetDepartments()
         {
-            return await _context.Departments.ToListAsync();
+            return await _context.Department.ToListAsync();
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<Department>> GetDepartment(int id)
         {
-            var department = await _context.Departments.FindAsync(id);
+            var department = await _context.Department.FindAsync(id);
 
             if (department == null)
             {
@@ -69,7 +69,7 @@ namespace StudyControlWeb.Controllers
         [HttpPost]
         public async Task<ActionResult<Department>> PostDepartment(Department department)
         {
-            _context.Departments.Add(department);
+            _context.Department.Add(department);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetDepartment", new { id = department.Id }, department);
@@ -77,20 +77,20 @@ namespace StudyControlWeb.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDepartment(int id)
         {
-            var department = await _context.Departments.FindAsync(id);
+            var department = await _context.Department.FindAsync(id);
             if (department == null)
             {
                 return NotFound();
             }
 
-            _context.Departments.Remove(department);
+            _context.Department.Remove(department);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
         private bool DepartmentExists(int id)
         {
-            return _context.Departments.Any(e => e.Id == id);
+            return _context.Department.Any(e => e.Id == id);
         }
     }
 }

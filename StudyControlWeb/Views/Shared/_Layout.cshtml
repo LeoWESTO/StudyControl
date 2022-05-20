@@ -3,39 +3,39 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - ДГТУ</title>
+    <title>@ViewBag.Title</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/StudyControlWeb.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">
+        <nav class="navbar navbar-expand navbar-toggleable navbar-light bg-white">
+            <div class="container justify-content-center">
+                <a class="navbar-brand" href="~/Home/Index">
                     <div class="container">
                         <img src="~/img/logo.png"/>
-                        Сопровождение учебного процесса ДГТУ
+                        Сопровождение учебного процесса
                     </div>
                 </a>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Меню</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Успеваемость</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Расписание</a>
-                        </li>
-                    </ul>
+            </div>
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                @if (User.Identity.IsAuthenticated)
+                {
                     <ul class="navbar-nav justify-content-end">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Выход</a>
+                            <a class="nav-link text-dark" href="~/Account/Logout">ВЫХОД</a>
                         </li>
                     </ul>
-                </div>
+                }
+                else
+                {
+                    <ul class="navbar-nav justify-content-end">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="~/Account/Login">ВХОД</a>
+                        </li>
+                    </ul>
+                }
             </div>
         </nav>
     </header>

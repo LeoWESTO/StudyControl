@@ -24,12 +24,12 @@ namespace StudyControlWeb.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Cell>>> GetCells()
         {
-            return await _context.Cells.ToListAsync();
+            return await _context.Cell.ToListAsync();
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<Cell>> GetCell(int id)
         {
-            var cell = await _context.Cells.FindAsync(id);
+            var cell = await _context.Cell.FindAsync(id);
 
             if (cell == null)
             {
@@ -69,7 +69,7 @@ namespace StudyControlWeb.Controllers
         [HttpPost]
         public async Task<ActionResult<Cell>> PostCell(Cell cell)
         {
-            _context.Cells.Add(cell);
+            _context.Cell.Add(cell);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetCell", new { id = cell.Id }, cell);
@@ -77,20 +77,20 @@ namespace StudyControlWeb.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCell(int id)
         {
-            var cell = await _context.Cells.FindAsync(id);
+            var cell = await _context.Cell.FindAsync(id);
             if (cell == null)
             {
                 return NotFound();
             }
 
-            _context.Cells.Remove(cell);
+            _context.Cell.Remove(cell);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
         private bool CellExists(int id)
         {
-            return _context.Cells.Any(e => e.Id == id);
+            return _context.Cell.Any(e => e.Id == id);
         }
     }
 }

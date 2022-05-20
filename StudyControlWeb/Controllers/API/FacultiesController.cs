@@ -24,12 +24,12 @@ namespace StudyControlWeb.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Faculty>>> GetFaculties()
         {
-            return await _context.Faculties.ToListAsync();
+            return await _context.Faculty.ToListAsync();
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<Faculty>> GetFaculty(int id)
         {
-            var faculty = await _context.Faculties.FindAsync(id);
+            var faculty = await _context.Faculty.FindAsync(id);
 
             if (faculty == null)
             {
@@ -69,7 +69,7 @@ namespace StudyControlWeb.Controllers
         [HttpPost]
         public async Task<ActionResult<Faculty>> PostFaculty(Faculty faculty)
         {
-            _context.Faculties.Add(faculty);
+            _context.Faculty.Add(faculty);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetFaculty", new { id = faculty.Id }, faculty);
@@ -77,20 +77,20 @@ namespace StudyControlWeb.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFaculty(int id)
         {
-            var faculty = await _context.Faculties.FindAsync(id);
+            var faculty = await _context.Faculty.FindAsync(id);
             if (faculty == null)
             {
                 return NotFound();
             }
 
-            _context.Faculties.Remove(faculty);
+            _context.Faculty.Remove(faculty);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
         private bool FacultyExists(int id)
         {
-            return _context.Faculties.Any(e => e.Id == id);
+            return _context.Faculty.Any(e => e.Id == id);
         }
     }
 }

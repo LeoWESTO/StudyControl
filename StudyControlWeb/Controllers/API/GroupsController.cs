@@ -24,12 +24,12 @@ namespace StudyControlWeb.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Group>>> GetGroups()
         {
-            return await _context.Groups.ToListAsync();
+            return await _context.Group.ToListAsync();
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<Group>> GetGroup(int id)
         {
-            var @group = await _context.Groups.FindAsync(id);
+            var @group = await _context.Group.FindAsync(id);
 
             if (@group == null)
             {
@@ -69,7 +69,7 @@ namespace StudyControlWeb.Controllers
         [HttpPost]
         public async Task<ActionResult<Group>> PostGroup(Group @group)
         {
-            _context.Groups.Add(@group);
+            _context.Group.Add(@group);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetGroup", new { id = @group.Id }, @group);
@@ -77,20 +77,20 @@ namespace StudyControlWeb.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGroup(int id)
         {
-            var @group = await _context.Groups.FindAsync(id);
+            var @group = await _context.Group.FindAsync(id);
             if (@group == null)
             {
                 return NotFound();
             }
 
-            _context.Groups.Remove(@group);
+            _context.Group.Remove(@group);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
         private bool GroupExists(int id)
         {
-            return _context.Groups.Any(e => e.Id == id);
+            return _context.Group.Any(e => e.Id == id);
         }
     }
 }

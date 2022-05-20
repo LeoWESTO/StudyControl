@@ -14,4 +14,11 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Faculty\" />
+    <Folder Include="Views\Department\" />
+    <Folder Include="Views\Student\" />
+    <Folder Include="Views\Teacher\" />
+  </ItemGroup>
+
 </Project>
