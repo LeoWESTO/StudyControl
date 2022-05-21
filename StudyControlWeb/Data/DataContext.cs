@@ -25,92 +25,127 @@ namespace StudyControlWeb.Data
                     {
                         Id = 1, 
                         Title = "Факультет компьютерных технологий, вычислительной техники и энергетики",
-                        DeanName = "Ширали",
-                        DeanSurname = "Юсуфов",
-                        DeanFathername = "Абдулкадиевич",
                         Password = "1"
                     },
                     new Faculty 
                     { 
                         Id = 2, 
                         Title = "Архитектурно-строительный факультет",
-                        DeanName = "Тагир",
-                        DeanSurname = "Азаев",
-                        DeanFathername = "Магомедович",
                         Password = "1"
                     },
                     new Faculty 
                     { 
                         Id = 3, 
                         Title = "Факультет информационных систем в экономике и управлении",
-                        DeanName = "Земфира",
-                        DeanSurname = "Раджабова",
-                        DeanFathername = "Рамазановна",
                         Password = "1"
                     },
                     new Faculty 
                     { 
                         Id = 4, 
                         Title = "Факультет радиоэлектроники, телекоммуникаций и мультимедийных технологий",
-                        DeanName = "Гюльнара",
-                        DeanSurname = "Кардашова",
-                        DeanFathername = "Дарвиновна",
                         Password = "1"
                     },
                     new Faculty 
                     { 
                         Id = 5, 
                         Title = "Технологический факультет",
-                        DeanName = "Фаина",
-                        DeanSurname = "Азимова",
-                        DeanFathername = "Шамиловна",
                         Password = "1"
                     },
                     new Faculty 
                     { 
                         Id = 6, 
                         Title = "Факультет нефти, газа и природообустройства ",
-                        DeanName = "Милада",
-                        DeanSurname = "Магомедова",
-                        DeanFathername = "Руслановна",
                         Password = "1"
                     },
                     new Faculty 
                     { 
                         Id = 7, 
                         Title = "Факультет права и управления на транспорте",
-                        DeanName = "Эдвард",
-                        DeanSurname = "Батманов",
-                        DeanFathername = "Загидинович",
                         Password = "1"
                     },
                     new Faculty 
                     { 
                         Id = 8, 
                         Title = "Факультет дополнительного образования и профессионального обучения",
-                        DeanName = "Айшат",
-                        DeanSurname = "Шахмаева",
-                        DeanFathername = "Расуловна",
                         Password = "1"
                     },
                     new Faculty 
                     { 
                         Id = 9, 
                         Title = "Факультет магистерской подготовки",
-                        DeanName = "Румина",
-                        DeanSurname = "Ашуралиева",
-                        DeanFathername = "Касумовна",
                         Password = "1"
                     },
                     new Faculty
                     {
                         Id = 10,
                         Title = "Факультет среднего профессионального образования",
-                        DeanName = "Мадина",
-                        DeanSurname = "Абдусаламова",
-                        DeanFathername = "Магомеддибировна",
                         Password = "1"
                     }
+                );
+            modelBuilder.Entity<Department>().HasData(
+                new Department
+                {
+                    Id = 1,
+                    FacultyId = 1,
+                    Title = "Кафедра электроэнергетики и возобновляемых источников энергии",
+                    Password = "1",
+                },
+                new Department
+                {
+                    Id = 2,
+                    FacultyId = 1,
+                    Title = "Кафедра прикладной математики и информатики",
+                    Password = "1",
+                },
+                new Department
+                {
+                    Id = 3,
+                    FacultyId = 1,
+                    Title = "Кафедра программного обеспечения вычислительной техники и автоматизированных систем",
+                    Password = "1",
+                },
+                new Department
+                {
+                    Id = 4,
+                    FacultyId = 1,
+                    Title = "Кафедра теоретической и общей электротехники",
+                    Password = "1",
+                },
+                new Department
+                {
+                    Id = 5,
+                    FacultyId = 1,
+                    Title = "Кафедра управления и информатики в технических системах и вычислительной техники",
+                    Password = "1",
+                },
+                new Department
+                {
+                    Id = 6,
+                    FacultyId = 1,
+                    Title = "Кафедра информационной безопасности",
+                    Password = "1",
+                }
+                );
+            modelBuilder.Entity<Teacher>().HasData(
+                new Teacher
+                {
+                    Id = 1,
+                    DepartmentId = 3,
+                    Surname = "Айгумов",
+                    Name = "Тимур",
+                    Fathername = "Гаджиевич",
+                    Password = "1"
+                }
+                );
+            modelBuilder.Entity<Student>().HasData(
+                new Student
+                {
+                    Id = 1,
+                    Surname = "Загиров",
+                    Name = "Амир",
+                    Fathername = "Анверович",
+                    Password = "1"
+                }
                 );
         }
     }

@@ -1,6 +1,6 @@
 ﻿@model StudyControlWeb.ViewModels.LoginStructModel
 
-<div class="text-center text-muted">
+<div class="text-center text-muted shadow m-3">
     <h2>Вход в структурное подразделение</h2>
     <form asp-action="LoginStruct" asp-controller="Account" asp-anti-forgery="true">
         <div class="validation" asp-validation-summary="All"></div>
@@ -16,7 +16,7 @@
                 <input asp-for="Password" type="password" class="form-control" />
                 <span asp-validation-for="Password" />
             </div>
-            <div class="form-group m-3">
+            <div class="form-group md-5">
                 <input type="submit" value="Войти" class="btn btn-outline-dark" />
             </div>
         </div>

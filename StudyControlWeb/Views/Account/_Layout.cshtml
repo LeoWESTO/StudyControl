@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewBag.Title</title>
+    <title>Сопровождение учебного процесса</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/StudyControlWeb.styles.css" asp-append-version="true" />
@@ -22,12 +22,9 @@
         </nav>
     </header>
     <div class="container">
-        <div class="row">
-            <partial name="_Menu"/>
-            <div class="col-lg-10 shadow-sm rounded">
-                @RenderBody()
-            </div>
-        </div>
+        <main role="main" class="pb-3 m-5">
+            @RenderBody()
+        </main>
     </div>
 
     <footer class="border-top footer text-muted">

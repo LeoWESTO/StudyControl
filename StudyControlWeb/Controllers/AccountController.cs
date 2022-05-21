@@ -36,7 +36,7 @@ namespace StudyControlWeb.Controllers
                 );
                 if (tea != null)
                 {
-                    await Authenticate($"{model.Surname} {model.Name} {model.Fathername}", "Teacher"); // аутентификация
+                    await Authenticate(tea.Id.ToString(), "Teacher"); // аутентификация
                     return RedirectToAction("Index", "Teacher");
                 }
                 var stu = await db.Student.FirstOrDefaultAsync(s =>
@@ -47,7 +47,7 @@ namespace StudyControlWeb.Controllers
                 );
                 if (stu != null)
                 {
-                    await Authenticate($"{model.Surname} {model.Name} {model.Fathername}", "Student"); // аутентификация
+                    await Authenticate(stu.Id.ToString(), "Student"); // аутентификация
                     return RedirectToAction("Index", "Student");
                 }
                 ModelState.AddModelError("", "Некорректные ФИО и(или) пароль");
@@ -57,7 +57,9 @@ namespace StudyControlWeb.Controllers
         [HttpGet]
         public IActionResult LoginStruct()
         {
-            ViewBag.Titles = new SelectList(db.Faculty.ToList(), "Title", "Title");
+            var list = db.Faculty.Select(f => f.Title).ToList();
+            list.AddRange(db.Department.Select(d => d.Title).ToList());
+            ViewBag.Titles = list.Select(l => new SelectListItem { Text = l, Value = l });
             return View();
         }
         [HttpPost]
@@ -72,7 +74,7 @@ namespace StudyControlWeb.Controllers
                 );
                 if (fac != null)
                 {
-                    await Authenticate(model.Title, "Faculty"); // аутентификация
+                    await Authenticate(fac.Id.ToString(), "Faculty"); // аутентификация
                     return RedirectToAction("Index", "Faculty");
                 }
                 var dep = await db.Department.FirstOrDefaultAsync(d =>
@@ -81,7 +83,7 @@ namespace StudyControlWeb.Controllers
                 );
                 if (dep != null)
                 {
-                    await Authenticate(model.Title, "Department"); // аутентификация
+                    await Authenticate(dep.Id.ToString(), "Department"); // аутентификация
                     return RedirectToAction("Index", "Department");
                 }
                 ModelState.AddModelError("", "Некорректный пароль");
