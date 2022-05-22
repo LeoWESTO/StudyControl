@@ -91,6 +91,29 @@ namespace StudyControlWeb.Controllers
             ViewBag.Titles = new SelectList(db.Faculty.ToList(), "Title", "Title");
             return View(model);
         }
+        public IActionResult LoginAdmin()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LoginAdmin(LoginAdminModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var adm = await db.Admin.FirstOrDefaultAsync(a =>
+                    a.Login == model.Login &&
+                    a.Password == model.Password
+                );
+                if (adm != null)
+                {
+                    await Authenticate(adm.Id.ToString(), "Admin"); // аутентификация
+                    return RedirectToAction("Index", "Admin");
+                }
+                ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+            }
+            return View(model);
+        }
         private async Task Authenticate(string userName, string role)
         {
             // создаем один claim
@@ -104,7 +127,6 @@ namespace StudyControlWeb.Controllers
             // установка аутентификационных куки
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
         }
-
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);

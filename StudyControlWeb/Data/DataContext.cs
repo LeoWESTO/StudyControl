@@ -13,6 +13,7 @@ namespace StudyControlWeb.Data
         public DbSet<Department> Department { get; set; }
         public DbSet<Cell> Cell { get; set; }
         public DbSet<Points> Point { get; set; }
+        public DbSet<Admin> Admin { get; set; }
 
         public DataContext(DbContextOptions options) : base(options)
         {
@@ -125,7 +126,7 @@ namespace StudyControlWeb.Data
                     Title = "Кафедра информационной безопасности",
                     Password = "1",
                 }
-                );
+            );
             modelBuilder.Entity<Teacher>().HasData(
                 new Teacher
                 {
@@ -136,7 +137,7 @@ namespace StudyControlWeb.Data
                     Fathername = "Гаджиевич",
                     Password = "1"
                 }
-                );
+            );
             modelBuilder.Entity<Student>().HasData(
                 new Student
                 {
@@ -146,7 +147,15 @@ namespace StudyControlWeb.Data
                     Fathername = "Анверович",
                     Password = "1"
                 }
-                );
+            );
+            modelBuilder.Entity<Admin>().HasData(
+                new Admin
+                {
+                    Id = 1,
+                    Login = "admin",
+                    Password = "1"
+                }
+            );
         }
     }
 }
