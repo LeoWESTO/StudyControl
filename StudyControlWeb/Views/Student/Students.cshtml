@@ -1,0 +1,42 @@
+﻿@model IEnumerable<StudyControlWeb.ViewModels.StudentViewModel>
+@{
+    
+}
+<div class="container">
+    <div class="col p-3">
+        <a class="btn btn-success" asp-action="CreateStudent" asp-controller="Student">Добавить студента</a>
+    </div>
+    <h3 class="p-3 text-center">Список студентов</h3>
+    
+    <table class="table table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <th>Фамилия</th>
+            <th>Имя</th>
+            <th>Отчество</th>
+            <th>Группа</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+            @foreach(var s in Model)
+            {
+                <tr>
+                    <td>@s.Surname</td>
+                    <td>@s.Name</td>
+                    <td>@s.Fathername</td>
+                    <td>@s.GroupCode</td>
+                    <td>
+                        <a class="btn btn-secondary" asp-action="EditStudent" asp-controller="Student" asp-route-id="@s.Id">Изменить</a>
+                    </td>
+                    <td>
+                        <form asp-action="DeleteStudent" asp-controller="Student" asp-route-id="@s.Id" method="post">
+                            <input type="submit" class="btn btn-danger" value="Удалить"/>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

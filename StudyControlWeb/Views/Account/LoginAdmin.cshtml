@@ -1,21 +1,21 @@
 ﻿@model StudyControlWeb.ViewModels.LoginAdminModel
 
 <div class="text-center text-muted shadow">
-    <h2>Войти в систему как администратор</h2>
+    <h2 class="p-3">Войти в систему как администратор</h2>
     <form asp-action="LoginAdmin" asp-controller="Account" asp-anti-forgery="true">
         <div class="validation" asp-validation-summary="All"></div>
         <div>
-            <div class="form-group m-3">
+            <div class="form-group p-3">
                 <label asp-for="Login">Логин</label>
                 <input type="text" class="form-control" asp-for="Login" />
                 <span asp-validation-for="Login" />
             </div>
-            <div class="form-group m-3">
+            <div class="form-group p-3">
                 <label asp-for="Password">Пароль</label>
                 <input asp-for="Password" type="password" class="form-control" />
                 <span asp-validation-for="Password" />
             </div>
-            <div class="form-group m-3">
+            <div class="form-group p-3">
                 <input type="submit" value="Войти" class="btn btn-outline-dark" />
             </div>
         </div>

@@ -1,0 +1,20 @@
+﻿@model StudyControlWeb.Models.DBO.Faculty
+@{
+
+}
+<div class="container">
+    <h3 class="text-center p-3">Редактирование факультета</h3>
+    <form asp-action="EditFaculty" asp-controller="Faculty" asp-route-id="@Model.Id">
+        <div class="form-group p-3">
+            <label asp-for="Title">Название</label><br />
+            <input type="text" asp-for="Title" />
+        </div>
+        <div class="form-group p-3">
+            <label asp-for="Password">Пароль для входа в структурное подразделение</label><br />
+            <input type="text" asp-for="Password" />
+        </div>
+        <div class="form-group p-3">
+            <input class="btn btn-secondary" type="submit" value="Сохранить" />
+        </div>
+    </form>
+</div>

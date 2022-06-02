@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StudyControlWeb.Models;
 using StudyControlWeb.Data;
+using StudyControlWeb.Models.DBO;
 
 namespace StudyControlWeb.Controllers
 {

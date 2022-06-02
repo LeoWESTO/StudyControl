@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using StudyControlWeb.Data;
+using StudyControlWeb.Data.Interfaces;
+using StudyControlWeb.Data.Repositories;
+using StudyControlWeb.Models.DBO;
 
 var builder = WebApplication.CreateBuilder(args);
 

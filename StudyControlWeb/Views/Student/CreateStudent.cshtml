@@ -1,0 +1,34 @@
+﻿@model StudyControlWeb.ViewModels.StudentViewModel
+@{
+
+}
+<div class="container">
+    <h3 class="text-center p-3">Добавление студента</h3>
+    <form asp-action="CreateStudent" asp-controller="Student">
+        <div class="form-group p-3">
+            <label asp-for="Surname">Фамилия</label><br />
+            <input class="form-control" type="text" asp-for="Surname" />
+        </div>
+        <div class="form-group p-3">
+            <label asp-for="Name">Имя</label><br />
+            <input class="form-control" type="text" asp-for="Name" />
+        </div>
+        <div class="form-group p-3">
+            <label asp-for="Fathername">Отчество</label><br />
+            <input class="form-control" type="text" asp-for="Fathername" />
+        </div>
+        <div class="form-group p-3">
+            <label>Группа</label>
+            <select asp-for="GroupCode" asp-items="@ViewBag.Titles">
+
+            </select>
+        </div>
+        <div class="form-group p-3">
+            <label asp-for="Password">Пароль</label><br />
+            <input class="form-control" type="text" asp-for="Password" />
+        </div>
+        <div class="form-group p-3">
+            <input class="btn btn-success" type="submit" value="Сохранить" />
+        </div>
+    </form>
+</div>

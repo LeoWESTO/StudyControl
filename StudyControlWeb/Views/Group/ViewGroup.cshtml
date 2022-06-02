@@ -1,0 +1,23 @@
+﻿@model StudyControlWeb.ViewModels.GroupViewModel
+@{
+    
+}
+<div class="container">
+    <h3 class="p-3 text-center">Студенты группы @Model.Code</h3>
+    
+    <table class="table table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <th>ФИО</th>
+        </tr>
+        </thead>
+        <tbody>
+            @foreach(var s in Model.Students)
+            {
+                <tr>
+                    <td>@s.Surname @s.Name @s.Fathername</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

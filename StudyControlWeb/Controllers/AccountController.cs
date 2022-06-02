@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StudyControlWeb.Data;
+using StudyControlWeb.Data.Repositories;
 using StudyControlWeb.Models;
 using StudyControlWeb.ViewModels;
 using System.Security.Claims;
@@ -12,10 +13,10 @@ namespace StudyControlWeb.Controllers
 {
     public class AccountController : Controller
     {
-        private DataContext db;
+        private UniversityRepository db;
         public AccountController(DataContext context)
         {
-            db = context;
+            db = new UniversityRepository(context);
         }
         [HttpGet]
         public IActionResult Login()
@@ -28,7 +29,7 @@ namespace StudyControlWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                var tea = await db.Teacher.FirstOrDefaultAsync(t =>
+                var tea = db.Teachers.GetAll().FirstOrDefault(t =>
                     t.Name == model.Name &&
                     t.Surname == model.Surname &&
                     t.Fathername == model.Fathername &&
@@ -37,9 +38,9 @@ namespace StudyControlWeb.Controllers
                 if (tea != null)
                 {
                     await Authenticate(tea.Id.ToString(), "Teacher"); // аутентификация
-                    return RedirectToAction("Index", "Teacher");
+                    return RedirectToAction("Index", "Home");
                 }
-                var stu = await db.Student.FirstOrDefaultAsync(s =>
+                var stu = db.Students.GetAll().FirstOrDefault(s =>
                     s.Name == model.Name &&
                     s.Surname == model.Surname &&
                     s.Fathername == model.Fathername &&
@@ -48,7 +49,7 @@ namespace StudyControlWeb.Controllers
                 if (stu != null)
                 {
                     await Authenticate(stu.Id.ToString(), "Student"); // аутентификация
-                    return RedirectToAction("Index", "Student");
+                    return RedirectToAction("Index", "Home");
                 }
                 ModelState.AddModelError("", "Некорректные ФИО и(или) пароль");
             }
@@ -57,8 +58,8 @@ namespace StudyControlWeb.Controllers
         [HttpGet]
         public IActionResult LoginStruct()
         {
-            var list = db.Faculty.Select(f => f.Title).ToList();
-            list.AddRange(db.Department.Select(d => d.Title).ToList());
+            var list = db.Faculties.GetAll().Select(f => f.Title).ToList();
+            list.AddRange(db.Departments.GetAll().Select(d => d.Title).ToList());
             ViewBag.Titles = list.Select(l => new SelectListItem { Text = l, Value = l });
             return View();
         }
@@ -68,27 +69,27 @@ namespace StudyControlWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                var fac = await db.Faculty.FirstOrDefaultAsync(f =>
+                var fac = db.Faculties.GetAll().FirstOrDefault(f =>
                     f.Title == model.Title &&
                     f.Password == model.Password
                 );
                 if (fac != null)
                 {
                     await Authenticate(fac.Id.ToString(), "Faculty"); // аутентификация
-                    return RedirectToAction("Index", "Faculty");
+                    return RedirectToAction("Index", "Home");
                 }
-                var dep = await db.Department.FirstOrDefaultAsync(d =>
+                var dep = db.Departments.GetAll().FirstOrDefault(d =>
                     d.Title == model.Title &&
                     d.Password == model.Password
                 );
                 if (dep != null)
                 {
                     await Authenticate(dep.Id.ToString(), "Department"); // аутентификация
-                    return RedirectToAction("Index", "Department");
+                    return RedirectToAction("Index", "Home");
                 }
                 ModelState.AddModelError("", "Некорректный пароль");
             }
-            ViewBag.Titles = new SelectList(db.Faculty.ToList(), "Title", "Title");
+            ViewBag.Titles = new SelectList(db.Faculties.GetAll(), "Title", "Title");
             return View(model);
         }
         public IActionResult LoginAdmin()
@@ -101,14 +102,14 @@ namespace StudyControlWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                var adm = await db.Admin.FirstOrDefaultAsync(a =>
+                var adm = db.Admins.GetAll().FirstOrDefault(a =>
                     a.Login == model.Login &&
                     a.Password == model.Password
                 );
                 if (adm != null)
                 {
                     await Authenticate(adm.Id.ToString(), "Admin"); // аутентификация
-                    return RedirectToAction("Index", "Admin");
+                    return RedirectToAction("Index", "Home");
                 }
                 ModelState.AddModelError("", "Некорректные логин и(или) пароль");
             }
@@ -116,15 +117,14 @@ namespace StudyControlWeb.Controllers
         }
         private async Task Authenticate(string userName, string role)
         {
-            // создаем один claim
             var claims = new List<Claim>
             {
                 new Claim(ClaimsIdentity.DefaultNameClaimType, userName),
                 new Claim(ClaimsIdentity.DefaultRoleClaimType, role)
             };
-            // создаем объект ClaimsIdentity
+
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
-            // установка аутентификационных куки
+
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
         }
         public async Task<IActionResult> Logout()

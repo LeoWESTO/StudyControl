@@ -1,0 +1,46 @@
+﻿@model IEnumerable<StudyControlWeb.ViewModels.GroupViewModel>
+@{
+    
+}
+<div class="container">
+    <div class="col p-3">
+        <a class="btn btn-success" asp-action="CreateGroup" asp-controller="Group">Добавить группу</a>
+    </div>
+    <h3 class="p-3 text-center">Список групп</h3>
+    
+    <table class="table table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <th>Код</th>
+            <th>Кафедра</th>
+            <th>Направление</th>
+            <th>Профиль</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+            @foreach(var g in Model)
+            {
+                <tr>
+                    <td>@g.Code</td>
+                    <td>@g.DepartmentTitle</td>
+                    <td>@g.AreaTitle</td>
+                    <td>@g.Profile</td>
+                    <td>
+                        <a class="btn btn-primary" asp-action="ViewGroup" asp-controller="Group" asp-route-id="@g.Id">Студенты</a>
+                    </td>
+                    <td>
+                        <a class="btn btn-secondary" asp-action="EditGroup" asp-controller="Group" asp-route-id="@g.Id">Изменить</a>
+                    </td>
+                    <td>
+                        <form asp-action="DeleteGroup" asp-controller="Group" asp-route-id="@g.Id" method="post">
+                            <input type="submit" class="btn btn-danger" value="Удалить"/>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -8,12 +8,6 @@ namespace StudyControlWeb.Controllers
     {
         public IActionResult Index()
         {
-            ViewBag.Title = "Меню";
-            if (User.IsInRole("Admin"))         return RedirectToAction("Index", "Admin");
-            if (User.IsInRole("Faculty"))       return RedirectToAction("Index", "Faculty");
-            if (User.IsInRole("Department"))    return RedirectToAction("Index", "Department");
-            if (User.IsInRole("Teacher"))       return RedirectToAction("Index", "Teacher");
-            if (User.IsInRole("Student"))       return RedirectToAction("Index", "Student");
             return View();
         }
     }
