@@ -15,6 +15,7 @@
             <th>Факультет</th>
             <th></th>
             <th></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -23,6 +24,9 @@
                 <tr>
                     <td>@d.Title</td>
                     <td>@d.FacultyTitle</td>
+                    <td>
+                        <a class="btn btn-warning" asp-action="Areas" asp-controller="Area" asp-route-id="@d.Id">Направления</a>
+                    </td>
                     <td>
                         <a class="btn btn-secondary" asp-action="EditDepartment" asp-controller="Department" asp-route-id="@d.Id">Изменить</a>
                     </td>

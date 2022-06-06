@@ -158,48 +158,7 @@ namespace StudyControlWeb.Data
         }
         private static void AreaBuild(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Area>().HasData(
-                new Area
-                {
-                    Id = 1,
-                    Code = "09.03.01",
-                    Title = "Информатика и вычислительная техника",
-                    Degree = Degree.Bachelor,
-                    IsActive = true,
-                },
-                new Area
-                {
-                    Id = 2,
-                    Code = "09.03.02",
-                    Title = "Информационные системы и технологии",
-                    Degree = Degree.Bachelor,
-                    IsActive = true,
-                },
-                new Area
-                {
-                    Id = 3,
-                    Code = "09.03.03",
-                    Title = "Прикладная информатика",
-                    Degree = Degree.Bachelor,
-                    IsActive = true,
-                },
-                new Area
-                {
-                    Id = 4,
-                    Code = "09.03.04",
-                    Title = "Программная инженерия",
-                    Degree = Degree.Bachelor,
-                    IsActive = true,
-                },
-                new Area
-                {
-                    Id = 5,
-                    Code = "10.03.01",
-                    Title = "Информационная безопасность",
-                    Degree = Degree.Bachelor,
-                    IsActive = true,
-                }
-            );
+           
         }
         private static void RoleBuild(ModelBuilder modelBuilder)
         {

@@ -1,0 +1,42 @@
+﻿@model StudyControlWeb.ViewModels.AreaViewModel
+@{
+
+}
+<div class="container">
+    <div class="col p-3">
+        <a class="btn btn-success" asp-action="CreateSubject" asp-controller="Subject", asp-route-id="@Model.Id">Добавить дисциплину</a>
+    </div>
+    <h3 class="p-3 text-center">Учебный план направления</h3>
+    <h5 class="p-3 text-center">@Model.Code @Model.Title (@Model.Profile)</h5>
+    <table class="table table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <th>Название</th>
+            <th>Семестр</th>
+            <th>Вид контроля</th>
+            <th>Преподаватель</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+            @foreach(var s in Model.Subjects)
+            {
+                <tr>
+                    <td>@s.Title</td>
+                    <td>@s.TermNumber</td>
+                    <td>@s.ControlType</td>
+                    <td>@s.TeacherFullName</td>
+                    <td>
+                        <a class="btn btn-secondary" asp-action="EditSubject" asp-controller="Subject" asp-route-id="@s.Id">Изменить</a>
+                    </td>
+                    <td>
+                        <form asp-action="DeleteSubject" asp-controller="Subject" asp-route-id="@s.Id" method="post">
+                            <input type="submit" class="btn btn-danger" value="Удалить"/>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

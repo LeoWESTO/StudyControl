@@ -64,6 +64,18 @@ namespace StudyControlWeb.Controllers
             db.Departments.Add(department);
             return RedirectToAction("Departments");
         }
+        public IActionResult ViewAreas(int? id)
+        {
+            if (id != null)
+            {
+                var areas = db.Departments.Get(id.ToString()).Areas;
+                if (areas != null)
+                {
+                    return View(areas);
+                }
+            }
+            return NotFound();
+        }
         public IActionResult EditDepartment(int? id)
         {
             if (id != null)

@@ -1,0 +1,36 @@
+﻿@model StudyControlWeb.ViewModels.AreaViewModel
+@{
+
+}
+<div class="container">
+    <h3 class="text-center p-3">Редактирование направления подготовки</h3>
+    <form asp-action="CreateArea" asp-controller="Area" asp-route-id="@Model.Id">
+        <div class="form-group p-3">
+            <label asp-for="Code">Код подготовки</label><br />
+            <input class="form-control" type="text" asp-for="Code" />
+        </div>
+        <div class="form-group p-3">
+            <label>Уровень образования</label>
+            <select asp-for="DegreeName" asp-items="@ViewBag.Degrees">
+
+            </select>
+        </div>
+        <div class="form-group p-3">
+            <label asp-for="Title">Направление</label><br />
+            <input class="form-control" type="text" asp-for="Title" />
+        </div>
+        <div class="form-group p-3">
+            <label asp-for="Profile">Профиль</label><br />
+            <input class="form-control" type="text" asp-for="Profile" />
+        </div>
+        <div class="form-group p-3">
+            <label>Выпускающая кафедра</label>
+            <select asp-for="DepartmentTitle" asp-items="@ViewBag.Titles">
+
+            </select>
+        </div>
+        <div class="form-group p-3">
+            <input class="btn btn-success" type="submit" value="Сохранить" />
+        </div>
+    </form>
+</div>

@@ -1,16 +1,24 @@
-﻿@model IEnumerable<StudyControlWeb.Models.DBO.Area>
+﻿@model IEnumerable<StudyControlWeb.ViewModels.AreaViewModel>
 @{
     
 }
 <div class="container">
+    <div class="col p-3">
+        <a class="btn btn-success" asp-action="CreateArea" asp-controller="Area">Добавить направление</a>
+    </div>
     <h3 class="p-3 text-center">Список направлений подготовки</h3>
     
     <table class="table table-hover">
         <thead class="thead-dark">
         <tr>
             <th>Код направления</th>
-            <th>Название</th>
-            <th>Входит в программу</th>
+            <th>Уровень подготовки</th>
+            <th>Направление</th>
+            <th>Профиль</th>
+            <th>Выпускающая кафедра</th>
+            <th></th>
+            <th></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -18,11 +26,20 @@
             {
                 <tr>
                     <td>@a.Code</td>
+                    <td>@a.DegreeName</td>
+                    <td>@a.Title</td>
+                    <td>@a.Profile</td>
+                    <td>@a.DepartmentTitle</td>
                     <td>
-                        @a.Title
+                        <a class="btn btn-warning" asp-action="Subjects" asp-controller="Subject" asp-route-id="@a.Id">Учебный план</a>
                     </td>
                     <td>
-                        @Html.CheckBoxFor(x => a.IsActive)
+                        <a class="btn btn-secondary" asp-action="EditArea" asp-controller="Area" asp-route-id="@a.Id">Изменить</a>
+                    </td>
+                    <td>
+                        <form asp-action="DeleteArea" asp-controller="Area" asp-route-id="@a.Id" method="get">
+                            <input type="submit" class="btn btn-danger" value="Удалить"/>
+                        </form>
                     </td>
                 </tr>
             }

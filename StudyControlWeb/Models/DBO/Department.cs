@@ -9,7 +9,7 @@ namespace StudyControlWeb.Models.DBO
     {
         public string Title { get; set; }
         public string Password { get; set; }
-        public int FacultyId { get; set; }
+        public int? FacultyId { get; set; }
         public virtual Faculty Faculty { get; set; }
         public virtual IEnumerable<Group> Groups { get; set; }
         public virtual IEnumerable<Area> Areas { get; set; }

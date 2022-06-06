@@ -8,14 +8,18 @@ namespace StudyControlWeb.Models.DBO
     public enum ControlType
     {
         Test,
+        GradingTest,
         Exam
     }
     public class Subject : BaseModel
     {
         public string Title { get; set; }
-        public ControlType? ControlType { get; set; }
-        public bool IsCoursework { get; set; }
+        public string ControlType { get; set; }
+        public int TermNumber { get; set; }
         public int? TeacherId { get; set; }
         public virtual Teacher Teacher { get; set; }
+        public int AreaId { get; set; }
+        public virtual Area Area { get; set; }
+        public virtual IEnumerable<Cell> Cells { get; set; }
     }
 }

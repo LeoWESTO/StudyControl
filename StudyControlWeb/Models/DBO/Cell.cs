@@ -13,16 +13,14 @@ namespace StudyControlWeb.Models.DBO
     }
     public class Cell : BaseModel 
     {
-        //[JsonIgnore]
-        //public Group Group { get; set; }
+        public virtual Group Group { get; set; }
         public int GroupId { get; set; }
-        //[JsonIgnore]
-        //public Subject Subject { get; set; }
+        public virtual Subject Subject { get; set; }
         public int SubjectId { get; set; }
-        //[JsonIgnore]
-        //public Teacher Teacher { get; set; }
+        public virtual Teacher Teacher { get; set; }
         public int TeacherId { get; set; }
 
+        public int Number { get; set; }
         public DateTime? Date { get; set; }
         public LessonType? LessonType { get; set; }
         public string? Classroom { get; set; }

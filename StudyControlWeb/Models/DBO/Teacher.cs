@@ -14,5 +14,6 @@ namespace StudyControlWeb.Models.DBO
         public int? DepartmentId { get; set; }
         public virtual Department Department { get; set;}
         public virtual IEnumerable<Subject> Subjects { get; set;}
+        public virtual IEnumerable<Cell> Cells { get; set; }
     }
 }

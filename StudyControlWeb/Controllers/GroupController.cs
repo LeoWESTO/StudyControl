@@ -26,9 +26,10 @@ namespace StudyControlWeb.Controllers
                     {
                         Id = g.Id,
                         Code = g.Code,
+                        Year = DateTime.Now.Year - g.StartDate.Year,
                         DepartmentTitle = g.Department.Title,
                         AreaTitle = g.Area.Title,
-                        Profile = g.Profile,
+                        Profile = g.Area.Profile,
                         StartYear = g.StartDate.Year
                     });
                 return View(model);
@@ -36,14 +37,15 @@ namespace StudyControlWeb.Controllers
             if (User.IsInRole("Faculty"))
             {
                 var model = db.Groups.GetAll().
-                    Where(g => g.Department.FacultyId.ToString() == User.Identity.Name).
+                    Where(g => g.FacultyId.ToString() == User.Identity.Name).
                     Select(g => new GroupViewModel()
                     {
                         Id = g.Id,
                         Code = g.Code,
+                        Year = DateTime.Now.Year - g.StartDate.Year,
                         DepartmentTitle = g.Department.Title,
                         AreaTitle = g.Area.Title,
-                        Profile = g.Profile,
+                        Profile = g.Area.Profile,
                         StartYear = g.StartDate.Year
                     });
                 return View(model);
@@ -56,9 +58,10 @@ namespace StudyControlWeb.Controllers
                     {
                         Id = g.Id,
                         Code = g.Code,
+                        Year = DateTime.Now.Year - g.StartDate.Year,
                         DepartmentTitle = g.Department.Title,
                         AreaTitle = g.Area.Title,
-                        Profile = g.Profile,
+                        Profile = g.Area.Profile,
                         StartYear = g.StartDate.Year
                     });
                 return View(model);
@@ -69,9 +72,9 @@ namespace StudyControlWeb.Controllers
         {
             var model = new GroupViewModel() { StartYear = DateTime.Now.Year };
 
-            ViewBag.Titles = Titles();
-            var areas = db.Areas.GetAll().Where(a => a.IsActive).Select(a => a.Title);
-            ViewBag.Areas = areas.Select(a => new SelectListItem { Text = a, Value = a });
+            ViewBag.DepartmentTitles = DepartmentTitles();
+            ViewBag.FacultyTitles = FacultyTitles();
+            ViewBag.Areas = Areas();
 
             return View(model);
         }
@@ -95,9 +98,11 @@ namespace StudyControlWeb.Controllers
             var group = new Group()
             {
                 Code = model.Code,
-                DepartmentId = db.Departments.GetAll().FirstOrDefault(d => d.Title == model.DepartmentTitle).Id,
-                AreaId = db.Areas.GetAll().FirstOrDefault(a => a.Title == model.AreaTitle).Id,
-                Profile = model.Profile,
+                DepartmentId = db.Departments.GetAll().FirstOrDefault(d => d.Title == model.AreaTitle.Split("|")[3]).Id,
+                FacultyId = db.Faculties.GetAll().FirstOrDefault(f => f.Title == model.FacultyTitle).Id,
+                AreaId = db.Areas.GetAll().FirstOrDefault(a => a.Code == model.AreaTitle.Split("|")[0] &&
+                                                                a.Title == model.AreaTitle.Split("|")[1] &&
+                                                                a.Profile == model.AreaTitle.Split("|")[2]).Id,
                 StartDate = new DateTime(model.StartYear, 9, 1)
             };
 
@@ -117,14 +122,12 @@ namespace StudyControlWeb.Controllers
                         Code = gro.Code,
                         DepartmentTitle = gro.Department.Title,
                         AreaTitle = gro.Area.Title,
-                        Profile = gro.Profile,
                         StartYear = gro.StartDate.Year
                     };
 
-                    
-                    ViewBag.Titles = Titles();
-                    var areas = db.Areas.GetAll().Where(a => a.IsActive).Select(a => a.Title);
-                    ViewBag.Areas = areas.Select(a => new SelectListItem { Text = a, Value = a });
+                    ViewBag.DepartmentTitles = DepartmentTitles();
+                    ViewBag.FacultyTitles = FacultyTitles();
+                    ViewBag.Areas = Areas();
 
                     return View(model);
                 }
@@ -138,9 +141,11 @@ namespace StudyControlWeb.Controllers
             {
                 Id = model.Id,
                 Code = model.Code,
-                DepartmentId = db.Departments.GetAll().FirstOrDefault(d => d.Title == model.DepartmentTitle).Id,
-                AreaId = db.Areas.GetAll().FirstOrDefault(a => a.Title == model.AreaTitle).Id,
-                Profile = model.Profile,
+                DepartmentId = db.Departments.GetAll().FirstOrDefault(d => d.Title == model.AreaTitle.Split("|")[3]).Id,
+                FacultyId = db.Faculties.GetAll().FirstOrDefault(f => f.Title == model.FacultyTitle).Id,
+                AreaId = db.Areas.GetAll().FirstOrDefault(a =>  a.Code == model.AreaTitle.Split("|")[0] &&
+                                                                a.Title == model.AreaTitle.Split("|")[1] &&
+                                                                a.Profile == model.AreaTitle.Split("|")[2]).Id,
                 StartDate = new DateTime(model.StartYear, 9, 1)
             };
 
@@ -157,7 +162,7 @@ namespace StudyControlWeb.Controllers
             }
             return NotFound();
         }
-        private IEnumerable<SelectListItem> Titles()
+        private IEnumerable<SelectListItem> DepartmentTitles()
         {
             IEnumerable<string> titles = new List<string>();
             if (User.IsInRole("Admin"))
@@ -166,13 +171,47 @@ namespace StudyControlWeb.Controllers
             }
             if (User.IsInRole("Faculty"))
             {
-                titles = db.Departments.GetAll().Where(d => d.FacultyId.ToString() == User.Identity.Name).Select(d => d.Title);
+                titles = db.Departments.GetAll().Select(d => d.Title);
             }
             if (User.IsInRole("Department"))
             {
                 titles = new List<string>() { db.Departments.Get(User.Identity.Name).Title };
             }
             return titles.Select(t => new SelectListItem { Text = t, Value = t });
+        }
+        private IEnumerable<SelectListItem> FacultyTitles()
+        {
+            IEnumerable<string> titles = new List<string>();
+            if (User.IsInRole("Admin"))
+            {
+                titles = db.Faculties.GetAll().Select(d => d.Title);
+            }
+            if (User.IsInRole("Faculty"))
+            {
+                titles = db.Faculties.GetAll().Where(f => f.Id.ToString() == User.Identity.Name).Select(d => d.Title);
+            }
+            if (User.IsInRole("Department"))
+            {
+                titles = db.Faculties.GetAll().Select(d => d.Title);
+            }
+            return titles.Select(t => new SelectListItem { Text = t, Value = t });
+        }
+        private IEnumerable<SelectListItem> Areas()
+        {
+            IEnumerable<string> titles = new List<string>();
+            if (User.IsInRole("Admin"))
+            {
+                titles = db.Areas.GetAll().Select(a => $"{a.Code}|{a.Title}|{a.Profile}|{a.Department.Title}");
+            }
+            if (User.IsInRole("Faculty"))
+            {
+                titles = db.Areas.GetAll().Select(a => $"{a.Code}|{a.Title}|{a.Profile}|{a.Department.Title}");
+            }
+            if (User.IsInRole("Department"))
+            {
+                titles = db.Areas.GetAll().Where(a => a.DepartmentId.ToString() == User.Identity.Name).Select(a => $"{a.Code}|{a.Title}|{a.Profile}|{a.Department.Title}");
+            }
+            return titles.OrderBy(t => t).Select(t => new SelectListItem { Text = t, Value = t });
         }
     }
 }

@@ -1,0 +1,37 @@
+﻿@model StudyControlWeb.ViewModels.SubjectViewModel
+@{
+
+}
+<div class="container">
+    <h3 class="text-center p-3">Редактирования дисциплины</h3>
+    <form asp-action="EditSubject" asp-controller="Subject">
+        <div class="invisible">
+            <select class="custom-select" asp-for="AreaId" asp-items="@ViewBag.Areas">
+
+            </select>
+        </div>
+        <div class="form-group p-3">
+            <label asp-for="Title">Название</label><br />
+            <input class="form-control" type="text" asp-for="Title" />
+        </div>
+        <div class="form-group p-3">
+            <label>Вид контроля</label>
+            <select class="custom-select" asp-for="ControlType" asp-items="@ViewBag.ControlTypes">
+
+            </select>
+        </div>
+        <div class="form-group p-3">
+            <label asp-for="TermNumber">Номер семестра</label><br />
+            <input class="form-control" type="number" asp-for="TermNumber" />
+        </div>
+        <div class="form-group p-3">
+            <label>Преподаватель</label>
+            <select class="custom-select" asp-for="TeacherFullName" asp-items="@ViewBag.Teachers">
+
+            </select>
+        </div>
+        <div class="form-group p-3">
+            <input class="btn btn-success" type="submit" value="Сохранить" />
+        </div>
+    </form>
+</div>

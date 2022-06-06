@@ -2,7 +2,7 @@
 
 namespace StudyControlWeb.Controllers
 {
-    public class TimetableController : Controller
+    public class ScheduleController : Controller
     {
         public IActionResult Index()
         {

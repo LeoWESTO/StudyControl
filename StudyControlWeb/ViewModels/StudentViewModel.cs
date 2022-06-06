@@ -9,6 +9,7 @@ namespace StudyControlWeb.ViewModels
         public string Surname { get; set; }
         public string Fathername { get; set; }
         public string GroupCode { get; set; }
+        public int Year { get; set; }
         [Required(ErrorMessage = "Введите пароль")]
         [DataType(DataType.Password)]
         public string Password { get; set; }

@@ -7,6 +7,8 @@ namespace StudyControlWeb.ViewModels
     {
         public int Id { get; set; }
         public string Code { get; set; }
+        public int Year { get; set; }
+        public string FacultyTitle { get; set; }
         public string DepartmentTitle { get; set; }
         public string AreaTitle { get; set; }
         public string Profile { get; set; }

@@ -14,6 +14,7 @@ namespace StudyControlWeb.Data.Repositories
         public IRepository<Cell> Cells { get; set; }
         public IRepository<Points> Points { get; set; }
         public IRepository<Area> Areas { get; set; }
+        public IRepository<Subject> Subjects { get; set; }
 
         public UniversityRepository(DataContext context)
         {
@@ -26,6 +27,7 @@ namespace StudyControlWeb.Data.Repositories
             Cells = new Repository<Cell>(context);
             Points = new Repository<Points>(context);
             Areas = new Repository<Area>(context);
+            Subjects = new Repository<Subject>(context);
         }
     }
 }

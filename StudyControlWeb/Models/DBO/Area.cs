@@ -11,8 +11,11 @@
     {
         public string Code { get; set; }
         public string Title { get; set; }
+        public string Profile { get; set; }
         public Degree Degree { get; set; }
-        public bool IsActive { get; set; }
+        public int DepartmentId { get; set; }
+        public virtual Department Department { get; set; }
         public virtual IEnumerable<Group> Groups { get; set; }
+        public virtual IEnumerable<Subject> Subjects { get; set; }
     }
 }

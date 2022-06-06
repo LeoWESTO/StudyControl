@@ -10,6 +10,8 @@ namespace StudyControlWeb.Models.DBO
     {
         public string Title { get; set; }
         public string Password { get; set; }
-        public virtual ICollection<Department> Departments { get; set; }
+        public virtual IEnumerable<Department> Departments { get; set; }
+        public virtual IEnumerable<Group> Groups { get; set; }
+        public virtual IEnumerable<Plan> Plans { get; set; }
     }
 }
