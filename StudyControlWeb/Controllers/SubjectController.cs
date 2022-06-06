@@ -37,7 +37,7 @@ namespace StudyControlWeb.Controllers
                         Id = s.Id,
                         Title = s.Title,
                         ControlType = s.ControlType,
-                        TeacherFullName = $"{s.Teacher.Surname} {s.Teacher.Name} {s.Teacher.Fathername}",
+                        TeacherFullName = $"{s.Teacher.Surname} {s.Teacher.Name[0]}. {s.Teacher.Fathername[0]}.",
                         TermNumber = s.TermNumber,
                     });
 
