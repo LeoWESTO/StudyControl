@@ -1,0 +1,44 @@
+﻿@model IEnumerable<StudyControlWeb.ViewModels.ScheduleViewModel>
+@{
+    
+}
+<div class="container">
+    <div class="col p-3">
+        <a class="btn btn-success" asp-action="CreateSchedule" asp-controller="Schedule">Добавить расписание</a>
+    </div>
+    <h3 class="p-3 text-center">Список расписаний</h3>
+    
+    <table class="table table-hover">
+        <thead class="thead-dark">
+        <tr>
+            <th>Семестр</th>
+            <th>Код группы</th>
+            <th>Факультет</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+            @foreach(var s in Model)
+            {
+                <tr>
+                    <td>@s.TermNumber</td>
+                    <td>@s.GroupCode</td>
+                    <td>@s.FacultyTitle</td>
+                    <td>
+                        <a class="btn btn-warning" asp-action="Cells" asp-controller="Cell" asp-route-scheduleId="@s.Id">Перейти</a>
+                    </td>
+                    <td>
+                        <a class="btn btn-secondary" asp-action="EditSchedule" asp-controller="Schedule" asp-route-id="@s.Id">Изменить</a>
+                    </td>
+                    <td>
+                        <form asp-action="DeleteSchedule" asp-controller="Schedule" asp-route-id="@s.Id" method="post">
+                            <input type="submit" class="btn btn-danger" value="Удалить"/>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

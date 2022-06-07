@@ -27,8 +27,9 @@ namespace StudyControlWeb.Controllers
                         Id = a.Id,
                         Code = a.Code,
                         Title = a.Title,
-                        Profile = a.Profile,
+                        Profile = string.Join(string.Empty, a.Profile.Split(' ', '-').Select(s => char.ToUpper(s[0]))),
                         DepartmentTitle = a.Department.Title,
+                        TermsCount = a.TermsCount,
                         DegreeName = a.Degree switch
                         {
                             Degree.Bachelor => "Бакалавриат",
@@ -46,8 +47,9 @@ namespace StudyControlWeb.Controllers
                     Id = a.Id,
                     Code = a.Code,
                     Title = a.Title,
-                    Profile = a.Profile,
+                    Profile = string.Join(string.Empty, a.Profile.Split(' ', '-').Select(s => char.ToUpper(s[0]))),
                     DepartmentTitle = a.Department.Title,
+                    TermsCount = a.TermsCount,
                     DegreeName = a.Degree switch
                     {
                         Degree.Bachelor => "Бакалавриат",
@@ -81,6 +83,7 @@ namespace StudyControlWeb.Controllers
                     "Аспирантура" => Degree.Postgraduate,
                 },
                 DepartmentId = db.Departments.GetAll().FirstOrDefault(d => d.Title == model.DepartmentTitle).Id,
+                TermsCount = model.TermsCount,
             };
             db.Areas.Add(area);
             return RedirectToAction("Areas");
@@ -99,6 +102,7 @@ namespace StudyControlWeb.Controllers
                         Title = area.Title,
                         Profile = area.Profile,
                         DepartmentTitle = area.Department.Title,
+                        TermsCount = area.TermsCount,
                         DegreeName = area.Degree switch
                         {
                             Degree.Bachelor => "Бакалавриат",
@@ -123,6 +127,7 @@ namespace StudyControlWeb.Controllers
                 Code = model.Code,
                 Title = model.Title,
                 Profile = model.Profile,
+                TermsCount = model.TermsCount,
                 Degree = model.DegreeName switch
                 {
                     "Бакалавриат" => Degree.Bachelor,
@@ -137,7 +142,7 @@ namespace StudyControlWeb.Controllers
             return RedirectToAction("Areas");
         }
         [HttpPost]
-        public IActionResult DeleteArea(int? id)
+        public IActionResult DeleteArea(int id)
         {
             if (id != null)
             {

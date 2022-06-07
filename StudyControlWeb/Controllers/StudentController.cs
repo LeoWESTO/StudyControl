@@ -45,6 +45,7 @@ namespace StudyControlWeb.Controllers
                         Surname = s.Surname,
                         Fathername = s.Fathername,
                         GroupCode = s.Group.Code,
+                        Year = DateTime.Now.Year - s.Group.StartDate.Year,
                         Password = s.Password
                     });
                 return View(model);
@@ -60,6 +61,7 @@ namespace StudyControlWeb.Controllers
                         Surname = s.Surname,
                         Fathername = s.Fathername,
                         GroupCode = s.Group.Code,
+                        Year = DateTime.Now.Year - s.Group.StartDate.Year,
                         Password = s.Password
                     });
                 return View(model);

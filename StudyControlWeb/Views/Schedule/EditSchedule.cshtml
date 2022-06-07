@@ -1,0 +1,28 @@
+﻿@model StudyControlWeb.ViewModels.ScheduleViewModel
+@{
+
+}
+<div class="container">
+    <h3 class="text-center p-3">Редактирование расписания</h3>
+    <form asp-action="EditSchedule" asp-controller="Schedule" asp-route-id="@Model.Id">
+        <div class="form-group p-3">
+            <label asp-for="TermNumber">Номер семестра</label><br />
+            <input class="form-control" type="number" asp-for="TermNumber" />
+        </div>
+        <div class="form-group p-3">
+            <label>Код группы</label>
+            <select asp-for="GroupCode" asp-items="@ViewBag.Groups">
+
+            </select>
+        </div>
+        <div class="form-group p-3">
+            <label>Факультет</label>
+            <select asp-for="FacultyTitle" asp-items="@ViewBag.Faculties">
+
+            </select>
+        </div>
+        <div class="form-group p-3">
+            <input class="btn btn-success" type="submit" value="Сохранить" />
+        </div>
+    </form>
+</div>

@@ -45,7 +45,7 @@ namespace StudyControlWeb.Data.Repositories
         {
             if (entity != null)
             {
-                if (_context.Faculty.Any(x => x.Id == entity.Id))
+                if (_context.Set<T>().Any(x => x.Id == entity.Id))
                 {
                     _context.Set<T>().Update(entity);
                     _context.SaveChanges();

@@ -16,6 +16,6 @@ namespace StudyControlWeb.Models.DBO
         public int AreaId { get; set; }
         public virtual Area Area { get; set; }
         public virtual IEnumerable<Student> Students { get; set; }
-        public virtual IEnumerable<Cell> Cells { get; set; }
+        public virtual IEnumerable<Schedule> Schedules { get; set; }
     }
 }

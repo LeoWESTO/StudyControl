@@ -11,6 +11,7 @@ namespace StudyControlWeb.Data.Repositories
         public IRepository<Faculty> Faculties { get; set; }
         public IRepository<Admin> Admins { get; set; }
         public IRepository<Group> Groups { get; set; }
+        public IRepository<Schedule> Schedules { get; set; }
         public IRepository<Cell> Cells { get; set; }
         public IRepository<Points> Points { get; set; }
         public IRepository<Area> Areas { get; set; }
@@ -28,6 +29,7 @@ namespace StudyControlWeb.Data.Repositories
             Points = new Repository<Points>(context);
             Areas = new Repository<Area>(context);
             Subjects = new Repository<Subject>(context);
+            Schedules = new Repository<Schedule>(context);
         }
     }
 }

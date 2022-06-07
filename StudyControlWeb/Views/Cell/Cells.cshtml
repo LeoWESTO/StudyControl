@@ -1,0 +1,60 @@
+﻿@model StudyControlWeb.ViewModels.ScheduleViewModel
+@{
+    var daysofweek = new Dictionary<int, string>()
+    {
+        {1, "Понедельник"},
+        {2, "Вторник"},
+        {3, "Среда"},
+        {4, "Четверг"},
+        {5, "Пятница"},
+        {6, "Суббота"},
+        {7, "Воскресенье"},
+    };
+}
+<div class="container">
+    @if(User.IsInRole("Admin") || User.IsInRole("Faculty"))
+    {
+        <div class="col p-3">
+            <a class="btn btn-success" asp-action="CreateCell" asp-controller="Cell", asp-route-ScheduleId="@Model.Id">Добавить пару</a>
+        </div>  
+    }
+    <h3 class="p-3 text-center">Список пар группы @Model.GroupCode (@Model.TermNumber семестр)</h3>
+    @if (Model.Cells.Count > 0)
+    {
+        var maxLesson = Model.Cells.Select(c => c.LessonNumber).Max();
+        @for (int week = 1; week <= Model.Cells.Select(c => c.WeekNumber).Max(); week++)
+        {
+            <div class="p-2">
+                <h4>Неделя @week</h4>
+                @for (int day = 1; day <= 7; day++)
+                {
+                    <span>@daysofweek[day]</span>
+                    <ul class="list-group container">
+                        @foreach (var c in Model.Cells.Where(c => c.WeekNumber == week && c.DayOfWeek == day).OrderBy(c => c.LessonNumber))
+                        {
+                            <li class="list-group-item row">
+                                <div class="col">
+                                    @c.LessonNumber пара
+                                </div>
+                                <div class="col">
+                                    @c.SubjectTitle (@c.ControlType)<br>
+                                    @c.LessonType 
+                                    @c.TeacherName<br>
+                                    @c.Classroom<br>
+                                    @if(User.IsInRole("Admin") || User.IsInRole("Faculty"))
+                                    {
+                                        <a class="btn btn-secondary btn-sm" asp-action="EditCell" asp-controller="Cell" asp-route-id="@c.Id">Изменить</a>
+                                        <form asp-action="DeleteCell" asp-controller="Cell" asp-route-id="@c.Id" method="post">
+                                            <input type="submit" class="btn btn-danger btn-sm" value="Удалить"/>
+                                        </form>
+                                    }
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        }
+    }
+    
+</div>

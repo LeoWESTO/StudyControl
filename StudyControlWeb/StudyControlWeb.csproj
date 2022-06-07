@@ -16,8 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Controllers\API\" />
     <Folder Include="Views\Plan\" />
-    <Folder Include="Views\Schedule\" />
     <Folder Include="Views\Performance\" />
   </ItemGroup>
 

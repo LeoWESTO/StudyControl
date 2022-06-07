@@ -3,7 +3,7 @@
 
 }
 <div class="container">
-    <h3 class="text-center p-3">Создание направления подготовки</h3>
+    <h3 class="text-center p-3">Добавление направления подготовки</h3>
     <form asp-action="CreateArea" asp-controller="Area">
         <div class="form-group p-3">
             <label asp-for="Code">Код подготовки</label><br />
@@ -22,6 +22,10 @@
         <div class="form-group p-3">
             <label asp-for="Profile">Профиль</label><br />
             <input class="form-control" type="text" asp-for="Profile" />
+        </div>
+        <div class="form-group p-3">
+            <label asp-for="TermsCount">Срок обучения в семестрах</label><br />
+            <input class="form-control" type="number" asp-for="TermsCount" />
         </div>
         <div class="form-group p-3">
             <label>Выпускающая кафедра</label>
