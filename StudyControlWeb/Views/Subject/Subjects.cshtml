@@ -28,11 +28,11 @@
                     <td>@s.ControlType</td>
                     <td>@s.TeacherFullName</td>
                     <td>
-                        <a class="btn btn-secondary" asp-action="EditSubject" asp-controller="Subject" asp-route-id="@s.Id">Изменить</a>
+                        <a class="btn btn-secondary btn-sm" asp-action="EditSubject" asp-controller="Subject" asp-route-id="@s.Id">Изменить</a>
                     </td>
                     <td>
                         <form asp-action="DeleteSubject" asp-controller="Subject" asp-route-id="@s.Id" method="post">
-                            <input type="submit" class="btn btn-danger" value="Удалить"/>
+                            <input type="submit" class="btn btn-danger btn-sm" value="Удалить"/>
                         </form>
                     </td>
                 </tr>

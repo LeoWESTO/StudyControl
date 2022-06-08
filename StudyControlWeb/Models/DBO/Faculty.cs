@@ -12,6 +12,5 @@ namespace StudyControlWeb.Models.DBO
         public string Password { get; set; }
         public virtual IEnumerable<Department> Departments { get; set; }
         public virtual IEnumerable<Group> Groups { get; set; }
-        public virtual IEnumerable<Plan> Plans { get; set; }
     }
 }

@@ -1,0 +1,32 @@
+﻿@model StudyControlWeb.ViewModels.IntermediateAttestationViewModel
+@{
+
+}
+<div class="container">
+    <h3 class="text-center p-3">Редактирование промежуточной аттестации</h3>
+    <form asp-action="EditIntermediateAttestation" asp-controller="Performance" asp-route-groupId="@ViewBag.GroupId">
+        <div class="form-group p-3">
+            <label>ФИО студента</label>
+            <select asp-for="StudentName" asp-items="@ViewBag.StudentNames">
+
+            </select>
+        </div>
+        <div class="form-group p-3">
+            <label>Дисциплина</label>
+            <select asp-for="SubjectTitle" asp-items="@ViewBag.SubjectTitles">
+
+            </select>
+        </div>
+        <div class="form-group p-3">
+            <label asp-for="Performance">Балл за успеваемость</label><br />
+            <input class="form-control" type="number" asp-for="Performance" />
+        </div>
+        <div class="form-group p-3">
+            <label asp-for="Date">Дата проведения</label><br />
+            <input class="form-control" type="date" asp-for="Date" />
+        </div>
+        <div class="form-group p-3">
+            <input class="btn btn-success" type="submit" value="Сохранить" />
+        </div>
+    </form>
+</div>

@@ -16,6 +16,9 @@ namespace StudyControlWeb.Data.Repositories
         public IRepository<Points> Points { get; set; }
         public IRepository<Area> Areas { get; set; }
         public IRepository<Subject> Subjects { get; set; }
+        public IRepository<CurrentAttestation> CurrentAttestations { get; set; }
+        public IRepository<IntermediateAttestation> IntermediateAttestations { get; set; }
+        public IRepository<FinalAttestation> FinalAttestations { get; set; }
 
         public UniversityRepository(DataContext context)
         {
@@ -30,6 +33,9 @@ namespace StudyControlWeb.Data.Repositories
             Areas = new Repository<Area>(context);
             Subjects = new Repository<Subject>(context);
             Schedules = new Repository<Schedule>(context);
+            CurrentAttestations = new Repository<CurrentAttestation>(context);
+            IntermediateAttestations = new Repository<IntermediateAttestation>(context);
+            FinalAttestations = new Repository<FinalAttestation>(context);
         }
     }
 }

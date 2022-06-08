@@ -6,6 +6,7 @@ namespace StudyControlWeb.Data
 {
     public class DataContext : DbContext
     {
+        public DbSet<FinalAttestation> FinalAttestations { get; set;}
         public DataContext(DbContextOptions options) : base(options)
         {
             Database.EnsureCreated();

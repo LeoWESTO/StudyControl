@@ -30,11 +30,11 @@
                     <td>@s.GroupCode</td>
                     <td>@s.Year</td>
                     <td>
-                        <a class="btn btn-secondary" asp-action="EditStudent" asp-controller="Student" asp-route-id="@s.Id">Изменить</a>
+                        <a class="btn btn-secondary btn-sm" asp-action="EditStudent" asp-controller="Student" asp-route-id="@s.Id">Изменить</a>
                     </td>
                     <td>
                         <form asp-action="DeleteStudent" asp-controller="Student" asp-route-id="@s.Id" method="post">
-                            <input type="submit" class="btn btn-danger" value="Удалить"/>
+                            <input type="submit" class="btn btn-danger btn-sm" value="Удалить"/>
                         </form>
                     </td>
                 </tr>

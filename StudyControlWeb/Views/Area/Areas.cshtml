@@ -31,14 +31,14 @@
                     <td>@a.Profile</td>
                     <td>@a.DepartmentTitle</td>
                     <td>
-                        <a class="btn btn-warning" asp-action="Subjects" asp-controller="Subject" asp-route-id="@a.Id">Учебный план</a>
+                        <a class="btn btn-warning btn-sm" asp-action="Subjects" asp-controller="Subject" asp-route-id="@a.Id">Учебный план</a>
                     </td>
                     <td>
-                        <a class="btn btn-secondary" asp-action="EditArea" asp-controller="Area" asp-route-id="@a.Id">Изменить</a>
+                        <a class="btn btn-secondary btn-sm" asp-action="EditArea" asp-controller="Area" asp-route-id="@a.Id">Изменить</a>
                     </td>
                     <td>
                         <form asp-action="DeleteArea" asp-controller="Area" asp-route-id="@a.Id" method="post">
-                            <input type="submit" class="btn btn-danger" value="Удалить"/>
+                            <input type="submit" class="btn btn-danger btn-sm" value="Удалить"/>
                         </form>
                     </td>
                 </tr>

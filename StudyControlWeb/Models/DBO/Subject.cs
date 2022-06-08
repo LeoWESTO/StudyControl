@@ -5,12 +5,6 @@ using System.Text.Json.Serialization;
 
 namespace StudyControlWeb.Models.DBO
 {
-    public enum ControlType
-    {
-        Test,
-        GradingTest,
-        Exam
-    }
     public class Subject : BaseModel
     {
         public string Title { get; set; }
@@ -21,5 +15,7 @@ namespace StudyControlWeb.Models.DBO
         public int AreaId { get; set; }
         public virtual Area Area { get; set; }
         public virtual IEnumerable<Cell> Cells { get; set; }
+        public virtual IEnumerable<CurrentAttestation> CurrentAttestations { get; set; }
+        public virtual IEnumerable<IntermediateAttestation> IntermediateAttestations { get; set; }
     }
 }

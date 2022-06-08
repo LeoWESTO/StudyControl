@@ -25,14 +25,14 @@
                     <td>@d.Title</td>
                     <td>@d.FacultyTitle</td>
                     <td>
-                        <a class="btn btn-warning" asp-action="Areas" asp-controller="Area" asp-route-id="@d.Id">Направления</a>
+                        <a class="btn btn-warning btn-sm" asp-action="Areas" asp-controller="Area" asp-route-id="@d.Id">Направления</a>
                     </td>
                     <td>
-                        <a class="btn btn-secondary" asp-action="EditDepartment" asp-controller="Department" asp-route-id="@d.Id">Изменить</a>
+                        <a class="btn btn-secondary btn-sm" asp-action="EditDepartment" asp-controller="Department" asp-route-id="@d.Id">Изменить</a>
                     </td>
                     <td>
                         <form asp-action="DeleteDepartment" asp-controller="Department" asp-route-id="@d.Id" method="post">
-                            <input type="submit" class="btn btn-danger" value="Удалить"/>
+                            <input type="submit" class="btn btn-danger btn-sm" value="Удалить"/>
                         </form>
                     </td>
                 </tr>

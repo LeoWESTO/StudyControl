@@ -29,7 +29,7 @@ namespace StudyControlWeb.Controllers
                         Year = DateTime.Now.Year - g.StartDate.Year,
                         DepartmentTitle = g.Department.Title,
                         AreaTitle = g.Area.Title,
-                        Profile = g.Area.Profile,
+                        Profile = string.Join(string.Empty, g.Area.Profile.Split(' ', '-').Select(s => char.ToUpper(s[0]))),
                         StartYear = g.StartDate.Year
                     });
                 return View(model);
@@ -45,7 +45,7 @@ namespace StudyControlWeb.Controllers
                         Year = DateTime.Now.Year - g.StartDate.Year,
                         DepartmentTitle = g.Department.Title,
                         AreaTitle = g.Area.Title,
-                        Profile = g.Area.Profile,
+                        Profile = string.Join(string.Empty, g.Area.Profile.Split(' ', '-').Select(s => char.ToUpper(s[0]))),
                         StartYear = g.StartDate.Year
                     });
                 return View(model);
@@ -61,7 +61,7 @@ namespace StudyControlWeb.Controllers
                         Year = DateTime.Now.Year - g.StartDate.Year,
                         DepartmentTitle = g.Department.Title,
                         AreaTitle = g.Area.Title,
-                        Profile = g.Area.Profile,
+                        Profile = string.Join(string.Empty, g.Area.Profile.Split(' ', '-').Select(s => char.ToUpper(s[0]))),
                         StartYear = g.StartDate.Year
                     });
                 return View(model);

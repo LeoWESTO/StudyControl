@@ -27,14 +27,14 @@
                     <td>@s.GroupCode</td>
                     <td>@s.FacultyTitle</td>
                     <td>
-                        <a class="btn btn-warning" asp-action="Cells" asp-controller="Cell" asp-route-scheduleId="@s.Id">Перейти</a>
+                        <a class="btn btn-warning btn-sm" asp-action="Cells" asp-controller="Cell" asp-route-scheduleId="@s.Id">Перейти</a>
                     </td>
                     <td>
-                        <a class="btn btn-secondary" asp-action="EditSchedule" asp-controller="Schedule" asp-route-id="@s.Id">Изменить</a>
+                        <a class="btn btn-secondary btn-sm" asp-action="EditSchedule" asp-controller="Schedule" asp-route-id="@s.Id">Изменить</a>
                     </td>
                     <td>
                         <form asp-action="DeleteSchedule" asp-controller="Schedule" asp-route-id="@s.Id" method="post">
-                            <input type="submit" class="btn btn-danger" value="Удалить"/>
+                            <input type="submit" class="btn btn-danger btn-sm" value="Удалить"/>
                         </form>
                     </td>
                 </tr>

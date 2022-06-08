@@ -32,14 +32,17 @@
                     <td>@g.AreaTitle</td>
                     <td>@g.Profile</td>
                     <td>
-                        <a class="btn btn-primary" asp-action="ViewGroup" asp-controller="Group" asp-route-id="@g.Id">Студенты</a>
+                        <a class="btn btn-warning btn-sm" asp-action="Attestations" asp-controller="Performance" asp-route-groupId="@g.Id">Успеваемость</a>
                     </td>
                     <td>
-                        <a class="btn btn-secondary" asp-action="EditGroup" asp-controller="Group" asp-route-id="@g.Id">Изменить</a>
+                        <a class="btn btn-primary btn-sm" asp-action="ViewGroup" asp-controller="Group" asp-route-id="@g.Id">Студенты</a>
+                    </td>
+                    <td>
+                        <a class="btn btn-secondary btn-sm" asp-action="EditGroup" asp-controller="Group" asp-route-id="@g.Id">Изменить</a>
                     </td>
                     <td>
                         <form asp-action="DeleteGroup" asp-controller="Group" asp-route-id="@g.Id" method="post">
-                            <input type="submit" class="btn btn-danger" value="Удалить"/>
+                            <input type="submit" class="btn btn-danger btn-sm" value="Удалить"/>
                         </form>
                     </td>
                 </tr>
