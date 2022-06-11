@@ -12,6 +12,7 @@
         public string Code { get; set; }
         public string Title { get; set; }
         public string Profile { get; set; }
+        public string Form { get; set; }
         public Degree Degree { get; set; }
         public int TermsCount { get; set; }
         public int DepartmentId { get; set; }

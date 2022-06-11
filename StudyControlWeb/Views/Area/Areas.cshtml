@@ -13,8 +13,8 @@
         <tr>
             <th>Код направления</th>
             <th>Уровень подготовки</th>
-            <th>Направление</th>
-            <th>Профиль</th>
+            <th>Наименование</th>
+            <th>Форма обучения</th>
             <th>Выпускающая кафедра</th>
             <th></th>
             <th></th>
@@ -27,8 +27,8 @@
                 <tr>
                     <td>@a.Code</td>
                     <td>@a.DegreeName</td>
-                    <td>@a.Title</td>
-                    <td>@a.Profile</td>
+                    <td>@a.Title (@a.Profile)</td>
+                    <td>@a.Form</td>
                     <td>@a.DepartmentTitle</td>
                     <td>
                         <a class="btn btn-warning btn-sm" asp-action="Subjects" asp-controller="Subject" asp-route-id="@a.Id">Учебный план</a>

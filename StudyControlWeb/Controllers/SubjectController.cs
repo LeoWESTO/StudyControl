@@ -27,6 +27,7 @@ namespace StudyControlWeb.Controllers
                     Id = id,
                     Title = area.Title,
                     Profile = area.Profile,
+                    Form = area.Form,
                     Code = area.Code,
                     DepartmentTitle = area.Department.Title,
                 };

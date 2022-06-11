@@ -28,6 +28,7 @@ namespace StudyControlWeb.Controllers
                         Code = a.Code,
                         Title = a.Title,
                         Profile = string.Join(string.Empty, a.Profile.Split(' ', '-').Select(s => char.ToUpper(s[0]))),
+                        Form = a.Form,
                         DepartmentTitle = a.Department.Title,
                         TermsCount = a.TermsCount,
                         DegreeName = a.Degree switch
@@ -48,6 +49,7 @@ namespace StudyControlWeb.Controllers
                     Code = a.Code,
                     Title = a.Title,
                     Profile = string.Join(string.Empty, a.Profile.Split(' ', '-').Select(s => char.ToUpper(s[0]))),
+                    Form = a.Form,
                     DepartmentTitle = a.Department.Title,
                     TermsCount = a.TermsCount,
                     DegreeName = a.Degree switch
@@ -64,6 +66,7 @@ namespace StudyControlWeb.Controllers
         {
             ViewBag.Titles = Titles();
             ViewBag.Degrees = Degrees();
+            ViewBag.Forms = Forms();
             return View();
         }
         [HttpPost]
@@ -75,6 +78,7 @@ namespace StudyControlWeb.Controllers
                 Code = model.Code,
                 Title = model.Title,
                 Profile = model.Profile,
+                Form = model.Form,
                 Degree = model.DegreeName switch
                 {
                     "Бакалавриат" => Degree.Bachelor,
@@ -101,6 +105,7 @@ namespace StudyControlWeb.Controllers
                         Code = area.Code,
                         Title = area.Title,
                         Profile = area.Profile,
+                        Form = area.Form,
                         DepartmentTitle = area.Department.Title,
                         TermsCount = area.TermsCount,
                         DegreeName = area.Degree switch
@@ -111,8 +116,11 @@ namespace StudyControlWeb.Controllers
                             Degree.Postgraduate => "Аспирантура",
                         }
                     };
+
                     ViewBag.Titles = Titles();
                     ViewBag.Degrees = Degrees();
+                    ViewBag.Forms = Forms();
+
                     return View(model);
                 }
             }
@@ -127,6 +135,7 @@ namespace StudyControlWeb.Controllers
                 Code = model.Code,
                 Title = model.Title,
                 Profile = model.Profile,
+                Form = model.Form,
                 TermsCount = model.TermsCount,
                 Degree = model.DegreeName switch
                 {
@@ -176,6 +185,17 @@ namespace StudyControlWeb.Controllers
                 "Магистратура",
                 "Специалитет",
                 "Аспирантура",
+            };
+
+            return titles.Select(t => new SelectListItem { Text = t, Value = t });
+        }
+        private IEnumerable<SelectListItem> Forms()
+        {
+            IEnumerable<string> titles = new List<string>()
+            {
+                "Очная",
+                "Очно-заочная",
+                "Заочная",
             };
 
             return titles.Select(t => new SelectListItem { Text = t, Value = t });

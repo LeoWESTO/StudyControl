@@ -8,6 +8,7 @@ namespace StudyControlWeb.ViewModels
         public string Code { get; set; }
         public string Title { get; set; }
         public string Profile { get; set; }
+        public string Form { get; set; }
         public int TermsCount { get; set; }
         public string DepartmentTitle { get; set; }
         public string DegreeName { get; set; }
