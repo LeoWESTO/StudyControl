@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using StudyControlWeb.Data;
 using StudyControlWeb.Data.Repositories;
 using StudyControlWeb.Models.DBO;
+using StudyControlWeb.ViewModels;
 
 namespace StudyControlWeb.Controllers
 {
@@ -16,42 +17,55 @@ namespace StudyControlWeb.Controllers
         }
         public IActionResult Faculties()
         {
-            return View(db.Faculties.GetAll());
+            return View(db.Faculties.GetAll().Select(f => new FacultyViewModel()
+            {
+                Id = f.Id,
+                Title = f.Title,
+            }));
         }
         public IActionResult CreateFaculty()
         {
             return View();
         }
         [HttpPost]
-        public IActionResult CreateFaculty(Faculty faculty)
+        public IActionResult CreateFaculty(FacultyViewModel model)
         {
+            var faculty = new Faculty()
+            {
+                Id = model.Id,
+                Title = model.Title,
+                Password = model.Password,
+            };
             db.Faculties.Add(faculty);
             return RedirectToAction("Faculties");
         }
-        public IActionResult EditFaculty(int? id)
+        public IActionResult EditFaculty(int id)
         {
-            if (id != null)
+            Faculty? fac = db.Faculties.Get(id.ToString());
+            if (fac != null) return View(new FacultyViewModel()
             {
-                Faculty? fac = db.Faculties.Get(id.ToString());
-                if (fac != null) return View(fac);
-            }
+                Id = fac.Id,
+                Title = fac.Title,
+            });
             return NotFound();
         }
         [HttpPost]
-        public IActionResult EditFaculty(Faculty faculty)
+        public IActionResult EditFaculty(FacultyViewModel model)
         {
+            var faculty = new Faculty()
+            {
+                Id = model.Id,
+                Title = model.Title,
+                Password = model.Password,
+            };
             db.Faculties.Update(faculty);
             return RedirectToAction("Faculties");
         }
         [HttpPost]
-        public IActionResult DeleteFaculty(int? id)
+        public IActionResult DeleteFaculty(int id)
         {
-            if (id != null)
-            {
-                db.Faculties.Delete(id.ToString());
-                return RedirectToAction("Faculties");
-            }
-            return NotFound();
+            db.Faculties.Delete(id.ToString());
+            return RedirectToAction("Faculties");
         }
     }
 }
