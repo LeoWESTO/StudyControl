@@ -11,9 +11,6 @@ namespace StudyControlWeb.Data
             FacultyBuild(modelBuilder);
             DepartmentBuild(modelBuilder);
             TeacherBuild(modelBuilder);
-            StudentBuild(modelBuilder);
-            AreaBuild(modelBuilder);
-            RoleBuild(modelBuilder);
         }
         private static void AdminBuild(ModelBuilder modelBuilder)
         {
@@ -149,44 +146,6 @@ namespace StudyControlWeb.Data
                     Name = "Тимур",
                     Fathername = "Гаджиевич",
                     Password = "1"
-                }
-            );
-        }
-        private static void StudentBuild(ModelBuilder modelBuilder)
-        {
-
-        }
-        private static void AreaBuild(ModelBuilder modelBuilder)
-        {
-           
-        }
-        private static void RoleBuild(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Role>().HasData(
-                new Role
-                {
-                    Id = 1,
-                    Name = "Admin",
-                },
-                new Role
-                {
-                    Id = 2,
-                    Name = "Faculty",
-                },
-                new Role
-                {
-                    Id = 3,
-                    Name = "Department",
-                },
-                new Role
-                {
-                    Id = 4,
-                    Name = "Teacher",
-                },
-                new Role
-                {
-                    Id = 5,
-                    Name = "Student",
                 }
             );
         }

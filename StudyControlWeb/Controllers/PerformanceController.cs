@@ -8,7 +8,7 @@ using StudyControlWeb.ViewModels;
 
 namespace StudyControlWeb.Controllers
 {
-    [Authorize(Roles = "Admin, Faculty, Department")]
+    [Authorize(Roles = "Admin, Faculty, Department, Student")]
     public class PerformanceController : Controller
     {
         private UniversityRepository db;
@@ -16,39 +16,83 @@ namespace StudyControlWeb.Controllers
         {
             db = new UniversityRepository(context);
         }
-        public IActionResult Attestations(int groupId)
+        public IActionResult Attestations(int? groupId)
         {
             var model = new AttestationsViewModel();
-            model.Group = db.Groups.Get(groupId.ToString());
-            var currents = db.CurrentAttestations.GetAll().
-                Select(c => new CurrentAttestationViewModel()
-                {
-                    Id = c.Id,
-                    StudentName = $"{c.Student.Surname} {c.Student.Name[0]}. {c.Student.Fathername[0]}.",
-                    SubjectTitle = c.Subject.Title,
-                    Performance = c.Performance,
-                    Attendance = c.Attendance,
-                    Date = c.Date,
-                });
-            var intermediates = db.IntermediateAttestations.GetAll().
-                Select(i => new IntermediateAttestationViewModel()
-                {
-                    Id = i.Id,
-                    StudentName = $"{i.Student.Surname} {i.Student.Name[0]}. {i.Student.Fathername[0]}.",
-                    SubjectTitle = i.Subject.Title,
-                    Performance = i.Performance,
-                    ControlType = i.ControlType,
-                    Date = i.Date,
-                });
-            var finales = db.FinalAttestations.GetAll().
-                Select(f => new FinalAttestationViewModel()
-                {
-                    Id = f.Id,
-                    Type = f.Type,
-                    StudentName = $"{f.Student.Surname} {f.Student.Name[0]}. {f.Student.Fathername[0]}.",
-                    Performance = f.Performance,
-                    Date = f.Date,
-                });
+            var currents = new List<CurrentAttestationViewModel>();
+            var intermediates = new List<IntermediateAttestationViewModel>();
+            var finales = new List<FinalAttestationViewModel>();
+            if (User.IsInRole("Student"))
+            {
+                groupId = db.Students.Get(User.Identity.Name).GroupId;
+                model.Group = db.Groups.Get(groupId.ToString());
+                currents = db.CurrentAttestations.GetAll().
+                    Where(c => c.StudentId.ToString() == User.Identity.Name).
+                    Select(c => new CurrentAttestationViewModel()
+                    {
+                        Id = c.Id,
+                        StudentName = $"{c.Student.Surname} {c.Student.Name[0]}. {c.Student.Fathername[0]}.",
+                        SubjectTitle = c.Subject.Title,
+                        Performance = c.Performance,
+                        Attendance = c.Attendance,
+                        Date = c.Date,
+                    }).ToList();
+                intermediates = db.IntermediateAttestations.GetAll().
+                    Where(i => i.StudentId.ToString() == User.Identity.Name).
+                    Select(i => new IntermediateAttestationViewModel()
+                    {
+                        Id = i.Id,
+                        StudentName = $"{i.Student.Surname} {i.Student.Name[0]}. {i.Student.Fathername[0]}.",
+                        SubjectTitle = i.Subject.Title,
+                        Performance = i.Performance,
+                        ControlType = i.ControlType,
+                        Date = i.Date,
+                    }).ToList();
+                finales = db.FinalAttestations.GetAll().
+                    Where(f => f.StudentId.ToString() == User.Identity.Name).
+                    Select(f => new FinalAttestationViewModel()
+                    {
+                        Id = f.Id,
+                        Type = f.Type,
+                        StudentName = $"{f.Student.Surname} {f.Student.Name[0]}. {f.Student.Fathername[0]}.",
+                        Performance = f.Performance,
+                        Date = f.Date,
+                    }).ToList();
+            }
+            else
+            {
+                model.Group = db.Groups.Get(groupId.ToString());
+                currents = db.CurrentAttestations.GetAll().
+                    Select(c => new CurrentAttestationViewModel()
+                    {
+                        Id = c.Id,
+                        StudentName = $"{c.Student.Surname} {c.Student.Name[0]}. {c.Student.Fathername[0]}.",
+                        SubjectTitle = c.Subject.Title,
+                        Performance = c.Performance,
+                        Attendance = c.Attendance,
+                        Date = c.Date,
+                    }).ToList();
+                intermediates = db.IntermediateAttestations.GetAll().
+                    Select(i => new IntermediateAttestationViewModel()
+                    {
+                        Id = i.Id,
+                        StudentName = $"{i.Student.Surname} {i.Student.Name[0]}. {i.Student.Fathername[0]}.",
+                        SubjectTitle = i.Subject.Title,
+                        Performance = i.Performance,
+                        ControlType = i.ControlType,
+                        Date = i.Date,
+                    }).ToList();
+                finales = db.FinalAttestations.GetAll().
+                    Select(f => new FinalAttestationViewModel()
+                    {
+                        Id = f.Id,
+                        Type = f.Type,
+                        StudentName = $"{f.Student.Surname} {f.Student.Name[0]}. {f.Student.Fathername[0]}.",
+                        Performance = f.Performance,
+                        Date = f.Date,
+                    }).ToList();
+            }
+            
             model.CurrentAttestations = currents.OrderBy(c => c.StudentName).ThenBy(c => c.Date).ToList();
             model.IntermediateAttestations = intermediates.OrderBy(c => c.StudentName).ThenBy(c => c.Date).ToList();
             model.FinalAttestations = finales.OrderBy(c => c.StudentName).ThenBy(c => c.Date).ToList();
@@ -155,7 +199,6 @@ namespace StudyControlWeb.Controllers
                                                                         s.Fathername == model.StudentName.Split(" ")[2]).Id,
                 SubjectId = group.Area.Subjects.FirstOrDefault(s => s.Title == model.SubjectTitle).Id,
                 Performance = model.Performance,
-                ControlType = group.Area.Subjects.FirstOrDefault(s => s.Title == model.SubjectTitle).ControlType,
                 Date = model.Date,
             };
 
@@ -200,7 +243,6 @@ namespace StudyControlWeb.Controllers
                                                                         s.Fathername == model.StudentName.Split(" ")[2]).Id,
                 SubjectId = group.Area.Subjects.FirstOrDefault(s => s.Title == model.SubjectTitle).Id,
                 Performance = model.Performance,
-                ControlType = group.Area.Subjects.FirstOrDefault(s => s.Title == model.SubjectTitle).ControlType,
                 Date = model.Date,
             };
 

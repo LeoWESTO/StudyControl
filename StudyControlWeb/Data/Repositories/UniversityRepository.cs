@@ -13,7 +13,6 @@ namespace StudyControlWeb.Data.Repositories
         public IRepository<Group> Groups { get; set; }
         public IRepository<Schedule> Schedules { get; set; }
         public IRepository<Cell> Cells { get; set; }
-        public IRepository<Points> Points { get; set; }
         public IRepository<Area> Areas { get; set; }
         public IRepository<Subject> Subjects { get; set; }
         public IRepository<CurrentAttestation> CurrentAttestations { get; set; }
@@ -29,7 +28,6 @@ namespace StudyControlWeb.Data.Repositories
             Admins = new Repository<Admin>(context);
             Groups = new Repository<Group>(context);
             Cells = new Repository<Cell>(context);
-            Points = new Repository<Points>(context);
             Areas = new Repository<Area>(context);
             Subjects = new Repository<Subject>(context);
             Schedules = new Repository<Schedule>(context);

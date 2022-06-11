@@ -3,11 +3,14 @@
     
 }
 <div class="container">
-    <div class="col p-3">
-        <a class="btn btn-success" asp-action="CreateCurrentAttestation" asp-controller="Performance" asp-route-groupId="@Model.Group.Id">Добавить текущую аттестацию</a>
-        <a class="btn btn-success" asp-action="CreateIntermediateAttestation" asp-controller="Performance" asp-route-groupId="@Model.Group.Id">Добавить промежуточную аттестацию</a>
-        <a class="btn btn-success" asp-action="CreateFinalAttestation" asp-controller="Performance" asp-route-groupId="@Model.Group.Id">Добавить итоговую аттестацию</a>
-    </div>
+    @if(User.IsInRole("Admin") || User.IsInRole("Faculty"))
+    {
+        <div class="col p-3">
+            <a class="btn btn-success" asp-action="CreateCurrentAttestation" asp-controller="Performance" asp-route-groupId="@Model.Group.Id">Добавить текущую аттестацию</a>
+            <a class="btn btn-success" asp-action="CreateIntermediateAttestation" asp-controller="Performance" asp-route-groupId="@Model.Group.Id">Добавить промежуточную аттестацию</a>
+            <a class="btn btn-success" asp-action="CreateFinalAttestation" asp-controller="Performance" asp-route-groupId="@Model.Group.Id">Добавить итоговую аттестацию</a>
+        </div>
+    }
     <h3 class="p-3 text-center">Список аттестаций @Model.Group.Code</h3>
     <h5 class="p-3 text-center">Текущие аттестации</h5>
     <table class="table table-hover">
@@ -31,14 +34,17 @@
                     <td>@c.Date.ToShortDateString()</td>
                     <td>@c.Performance</td>
                     <td>@c.Attendance</td>
-                    <td>
-                        <a class="btn btn-secondary btn-sm" asp-action="EditCurrentAttestation" asp-controller="Performance" asp-route-id="@c.Id" asp-route-groupId="@Model.Group.Id">Изменить</a>
-                    </td>
-                    <td>
-                        <form asp-action="DeleteCurrentAttestation" asp-controller="Performance" asp-route-id="@c.Id" method="post">
-                            <input type="submit" class="btn btn-danger btn-sm" value="Удалить"/>
-                        </form>
-                    </td>
+                    @if(User.IsInRole("Admin") || User.IsInRole("Faculty"))
+                    {
+                        <td>
+                            <a class="btn btn-secondary btn-sm" asp-action="EditCurrentAttestation" asp-controller="Performance" asp-route-id="@c.Id" asp-route-groupId="@Model.Group.Id">Изменить</a>
+                        </td>
+                        <td>
+                            <form asp-action="DeleteCurrentAttestation" asp-controller="Performance" asp-route-id="@c.Id" method="post">
+                                <input type="submit" class="btn btn-danger btn-sm" value="Удалить"/>
+                            </form>
+                        </td>
+                    }
                 </tr>
             }
                 
@@ -66,14 +72,17 @@
                     <td>@i.ControlType</td>
                     <td>@i.Date.ToShortDateString()</td>
                     <td>@i.Performance</td>
-                    <td>
-                        <a class="btn btn-secondary btn-sm" asp-action="EditIntermediateAttestation" asp-controller="Performance" asp-route-id="@i.Id" asp-route-groupId="@Model.Group.Id">Изменить</a>
-                    </td>
-                    <td>
-                        <form asp-action="DeleteIntermediateAttestation" asp-controller="Performance" asp-route-id="@i.Id" method="post">
-                            <input type="submit" class="btn btn-danger btn-sm" value="Удалить"/>
-                        </form>
-                    </td>
+                    @if(User.IsInRole("Admin") || User.IsInRole("Faculty"))
+                    {
+                        <td>
+                            <a class="btn btn-secondary btn-sm" asp-action="EditIntermediateAttestation" asp-controller="Performance" asp-route-id="@i.Id" asp-route-groupId="@Model.Group.Id">Изменить</a>
+                        </td>
+                        <td>
+                            <form asp-action="DeleteIntermediateAttestation" asp-controller="Performance" asp-route-id="@i.Id" method="post">
+                                <input type="submit" class="btn btn-danger btn-sm" value="Удалить"/>
+                            </form>
+                        </td>
+                    }
                 </tr>
             }
                 
@@ -99,14 +108,17 @@
                     <td>@f.Type</td>
                     <td>@f.Date.ToShortDateString()</td>
                     <td>@f.Performance</td>
-                    <td>
-                        <a class="btn btn-secondary btn-sm" asp-action="EditFinalAttestation" asp-controller="Performance" asp-route-id="@f.Id" asp-route-groupId="@Model.Group.Id">Изменить</a>
-                    </td>
-                    <td>
-                        <form asp-action="DeleteFinalAttestation" asp-controller="Performance" asp-route-id="@f.Id" method="post">
-                            <input type="submit" class="btn btn-danger btn-sm" value="Удалить"/>
-                        </form>
-                    </td>
+                    @if(User.IsInRole("Admin") || User.IsInRole("Faculty"))
+                    {
+                        <td>
+                            <a class="btn btn-secondary btn-sm" asp-action="EditFinalAttestation" asp-controller="Performance" asp-route-id="@f.Id" asp-route-groupId="@Model.Group.Id">Изменить</a>
+                        </td>
+                        <td>
+                            <form asp-action="DeleteFinalAttestation" asp-controller="Performance" asp-route-id="@f.Id" method="post">
+                                <input type="submit" class="btn btn-danger btn-sm" value="Удалить"/>
+                            </form>
+                        </td>
+                    }
                 </tr>
             }
                 

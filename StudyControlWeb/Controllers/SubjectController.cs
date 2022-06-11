@@ -36,7 +36,7 @@ namespace StudyControlWeb.Controllers
                     {
                         Id = s.Id,
                         Title = s.Title,
-                        ControlType = s.ControlType,
+                        ControlTypes = s.ControlTypes.Length > 2 ? s.ControlTypes[0..(s.ControlTypes.Length - 2)] : "",
                         TeacherFullName = $"{s.Teacher.Surname} {s.Teacher.Name[0]}. {s.Teacher.Fathername[0]}.",
                         TermNumber = s.TermNumber,
                     });
@@ -57,10 +57,16 @@ namespace StudyControlWeb.Controllers
         [HttpPost]
         public IActionResult CreateSubject(SubjectViewModel model, int id)
         {
+            string types = "";
+            if (model.IsTest) types += "Зачет, ";
+            if (model.IsGradingTest) types += "Диф. зачет, ";
+            if (model.IsExam) types += "Экзамен, ";
+            if (model.IsCourseWork) types += "Курсовая работа, ";
+
             var subject = new Subject()
             {
                 AreaId = id,
-                ControlType = model.ControlType,
+                ControlTypes = types,
                 Title = model.Title,
                 TermNumber = model.TermNumber,
                 TeacherId = db.Teachers.GetAll().FirstOrDefault(t =>    t.Surname == model.TeacherFullName.Split(" ")[0] &&
@@ -78,7 +84,10 @@ namespace StudyControlWeb.Controllers
                 var model = new SubjectViewModel()
                 {
                     Id = id,
-                    ControlType = subject.ControlType,
+                    IsTest = subject.ControlTypes.Contains("Зачет") ? true : false,
+                    IsGradingTest = subject.ControlTypes.Contains("Диф. зачет") ? true : false,
+                    IsExam = subject.ControlTypes.Contains("Экзамен") ? true : false,
+                    IsCourseWork = subject.ControlTypes.Contains("Курсовая работа") ? true : false,
                     TermNumber = subject.TermNumber,
                     Title = subject.Title,
                     AreaId = subject.AreaId,
@@ -96,11 +105,17 @@ namespace StudyControlWeb.Controllers
         [HttpPost]
         public IActionResult EditSubject(SubjectViewModel model)
         {
+            string types = "";
+            if (model.IsTest) types += "Зачет, ";
+            if (model.IsGradingTest) types += "Диф. зачет, ";
+            if (model.IsExam) types += "Экзамен, ";
+            if (model.IsCourseWork) types += "Курсовая работа, ";
+
             var subject = new Subject()
             {
                 Id = model.Id,
                 AreaId = model.AreaId,
-                ControlType = model.ControlType,
+                ControlTypes = types,
                 Title = model.Title,
                 TermNumber = model.TermNumber,
                 TeacherId = db.Teachers.GetAll().FirstOrDefault(t => t.Surname == model.TeacherFullName.Split(" ")[0] &&
@@ -116,8 +131,7 @@ namespace StudyControlWeb.Controllers
         {
             var sub = db.Subjects.Get(id.ToString());
             db.Subjects.Delete(id.ToString());
-            id = sub.AreaId;
-            return RedirectToAction("Subjects", new { id });
+            return RedirectToAction("Subjects", new { id = sub.AreaId });
         }
     }
 }

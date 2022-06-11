@@ -8,7 +8,7 @@ namespace StudyControlWeb.Models.DBO
     public class Subject : BaseModel
     {
         public string Title { get; set; }
-        public string ControlType { get; set; }
+        public string ControlTypes { get; set; }
         public int TermNumber { get; set; }
         public int? TeacherId { get; set; }
         public virtual Teacher Teacher { get; set; }

@@ -7,13 +7,13 @@
     <form asp-action="EditFinalAttestation" asp-controller="Performance" asp-route-groupId="@ViewBag.GroupId">
         <div class="form-group p-3">
             <label>ФИО студента</label>
-            <select asp-for="StudentName" asp-items="@ViewBag.StudentNames">
+            <select class="form-select" asp-for="StudentName" asp-items="@ViewBag.StudentNames">
 
             </select>
         </div>
         <div class="form-group p-3">
             <label>Дисциплина</label>
-            <select asp-for="Type" asp-items="@ViewBag.Types">
+            <select class="form-select" asp-for="Type" asp-items="@ViewBag.Types">
 
             </select>
         </div>
