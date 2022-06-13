@@ -40,10 +40,13 @@
                                     @c.SubjectTitle (@c.ControlType)<br>
                                     @c.LessonType 
                                     @c.TeacherName<br>
-                                    @c.Classroom<br>
+                                    Аудитория: @c.Classroom<br>
                                     @if(User.IsInRole("Admin") || User.IsInRole("Faculty"))
                                     {
                                         <a class="btn btn-secondary btn-sm" asp-action="EditCell" asp-controller="Cell" asp-route-id="@c.Id">Изменить</a>
+                                        <form asp-action="CopyCell" asp-controller="Cell" asp-route-id="@c.Id" method="post">
+                                            <input type="submit" class="btn btn-primary btn-sm" value="Копировать"/>
+                                        </form>
                                         <form asp-action="DeleteCell" asp-controller="Cell" asp-route-id="@c.Id" method="post">
                                             <input type="submit" class="btn btn-danger btn-sm" value="Удалить"/>
                                         </form>

@@ -42,6 +42,7 @@ namespace StudyControlWeb.Controllers
                         LessonNumber = c.LessonNumber,
                         DayOfWeek = c.DayOfWeek,
                         WeekNumber = c.WeekNumber,
+                        ControlType = c.Subject.ControlTypes.Length > 2 ? c.Subject.ControlTypes[0..(c.Subject.ControlTypes.Length - 2)] : "",
                     });
 
                 model.Cells = cells.OrderBy(c => c.WeekNumber).ToList();
@@ -51,7 +52,8 @@ namespace StudyControlWeb.Controllers
         [Authorize(Roles = "Admin, Faculty")]
         public IActionResult CreateCell(int scheduleId)
         {
-            ViewBag.Subjects = db.Schedules.Get(scheduleId.ToString()).Group.Area.Subjects.Select(s => s.Title).Select(t => new SelectListItem { Text = t, Value = t });
+            var schedule = db.Schedules.Get(scheduleId.ToString());
+            ViewBag.Subjects = schedule.Group.Area.Subjects.Where(s => s.TermNumber == schedule.TermNumber).Select(s => s.Title).Select(t => new SelectListItem { Text = t, Value = t });
             ViewBag.LessonType = new List<string>() { "ЛК", "ПЗ", "ЛБ", "КР", "Консультация", "Экзамен" }.Select(t => new SelectListItem { Text = t, Value = t });
             ViewBag.ScheduleId = new List<SelectListItem>() { new SelectListItem { Text = scheduleId.ToString(), Value = scheduleId.ToString() } };
             return View();
@@ -94,7 +96,8 @@ namespace StudyControlWeb.Controllers
                     WeekNumber = cell.WeekNumber,
                 };
 
-                ViewBag.Subjects = db.Schedules.Get(cell.ScheduleId.ToString()).Group.Area.Subjects.Select(s => s.Title).Select(t => new SelectListItem { Text = t, Value = t });
+                var schedule = db.Schedules.Get(cell.ScheduleId.ToString());
+                ViewBag.Subjects = schedule.Group.Area.Subjects.Where(s => s.TermNumber == schedule.TermNumber).Select(s => s.Title).Select(t => new SelectListItem { Text = t, Value = t });
                 ViewBag.LessonType = new List<string>() { "ЛК", "ПЗ", "ЛБ", "КР", "Консультация", "Экзамен" }.Select(t => new SelectListItem { Text = t, Value = t });
                 ViewBag.ScheduleId = new List<SelectListItem>() { new SelectListItem { Text = cell.ScheduleId.ToString(), Value = cell.ScheduleId.ToString() } };
 
@@ -130,6 +133,31 @@ namespace StudyControlWeb.Controllers
             var cell = db.Cells.Get(id.ToString());
             db.Cells.Delete(id.ToString());
             return RedirectToAction("Cells", new { scheduleId = cell.ScheduleId });
+        }
+        [Authorize(Roles = "Admin, Faculty")]
+        [HttpPost]
+        public IActionResult CopyCell(int id)
+        {
+            var cell = db.Cells.Get(id.ToString());
+            if (cell != null)
+            {
+                var copyCell = new Cell()
+                {
+                    ScheduleId = cell.ScheduleId,
+                    SubjectId = cell.SubjectId,
+                    GroupId = cell.GroupId,
+                    TeacherId = cell.TeacherId,
+                    LessonNumber = cell.LessonNumber + 1,
+                    LessonType = cell.LessonType,
+                    DayOfWeek = cell.DayOfWeek,
+                    WeekNumber = cell.WeekNumber,
+                    Classroom = cell.Classroom,
+                };
+
+                db.Cells.Add(copyCell);
+                return RedirectToAction("Cells", new { scheduleId = cell.ScheduleId });
+            }
+            return NotFound();
         }
     }
 }

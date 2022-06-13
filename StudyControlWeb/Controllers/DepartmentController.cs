@@ -120,5 +120,23 @@ namespace StudyControlWeb.Controllers
             }
             return NotFound();
         }
+        [HttpPost]
+        public IActionResult CopyDepartment(int id)
+        {
+            var department = db.Departments.Get(id.ToString());
+            if (department != null)
+            {
+                var copyDepartment = new Department()
+                {
+                    Title = department.Title,
+                    FacultyId = department.FacultyId,
+                    Password = department.Password,
+                };
+
+                db.Departments.Add(copyDepartment);
+                return RedirectToAction("Departments");
+            }
+            return NotFound();
+        }
     }
 }

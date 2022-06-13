@@ -1,21 +1,29 @@
 ﻿@model StudyControlWeb.ViewModels.StudentViewModel
 @{
-
+    
 }
 <div class="container">
     <h3 class="text-center p-3">Редактирование студента</h3>
     <form asp-action="EditStudent" asp-controller="Student" asp-route-id="@Model.Id">
-        <div class="form-group p-3">
-            <label asp-for="Surname">Фамилия</label><br />
-            <input class="form-control" type="text" asp-for="Surname" />
-        </div>
-        <div class="form-group p-3">
-            <label asp-for="Name">Имя</label><br />
-            <input class="form-control" type="text" asp-for="Name" />
-        </div>
-        <div class="form-group p-3">
-            <label asp-for="Fathername">Отчество</label><br />
-            <input class="form-control" type="text" asp-for="Fathername" />
+        <div class="row">
+            <div class="col">
+                <div class="form-group p-3">
+                    <label asp-for="Surname">Фамилия</label><br />
+                    <input class="form-control" type="text" asp-for="Surname" />
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group p-3">
+                    <label asp-for="Name">Имя</label><br />
+                    <input class="form-control" type="text" asp-for="Name" />
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group p-3">
+                    <label asp-for="Fathername">Отчество</label><br />
+                    <input class="form-control" type="text" asp-for="Fathername" />
+                </div>
+            </div>
         </div>
         <div class="form-group p-3">
             <label>Группа</label>

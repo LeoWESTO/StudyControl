@@ -20,6 +20,7 @@
             <th></th>
             <th></th>
             <th></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -39,6 +40,11 @@
                     </td>
                     <td>
                         <a class="btn btn-secondary btn-sm" asp-action="EditGroup" asp-controller="Group" asp-route-id="@g.Id">Изменить</a>
+                    </td>
+                    <td>
+                        <form asp-action="CopyGroup" asp-controller="Group" asp-route-id="@g.Id" method="post">
+                            <input type="submit" class="btn btn-primary btn-sm" value="Копировать"/>
+                        </form>
                     </td>
                     <td>
                         <form asp-action="DeleteGroup" asp-controller="Group" asp-route-id="@g.Id" method="post">

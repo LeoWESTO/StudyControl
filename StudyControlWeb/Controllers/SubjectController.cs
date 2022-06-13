@@ -134,5 +134,25 @@ namespace StudyControlWeb.Controllers
             db.Subjects.Delete(id.ToString());
             return RedirectToAction("Subjects", new { id = sub.AreaId });
         }
+        [HttpPost]
+        public IActionResult CopySubject(int id)
+        {
+            var subject = db.Subjects.Get(id.ToString());
+            if (subject != null)
+            {
+                var copySubject = new Subject()
+                {
+                    AreaId = subject.AreaId,
+                    ControlTypes = subject.ControlTypes,
+                    Title = subject.Title,
+                    TermNumber = subject.TermNumber,
+                    TeacherId = subject.TeacherId,
+                };
+
+                db.Subjects.Add(copySubject);
+                return RedirectToAction("Subjects", new { id = subject.AreaId });
+            }
+            return NotFound();
+        }
     }
 }

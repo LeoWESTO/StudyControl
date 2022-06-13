@@ -67,5 +67,21 @@ namespace StudyControlWeb.Controllers
             db.Faculties.Delete(id.ToString());
             return RedirectToAction("Faculties");
         }
+        [HttpPost]
+        public IActionResult CopyFaculty(int id)
+        {
+            var faculty = db.Faculties.Get(id.ToString());
+            if (faculty != null)
+            {
+                var copyFaculty = new Faculty()
+                {
+                    Title = faculty.Title,
+                    Password = faculty.Password,
+                };
+                db.Faculties.Add(copyFaculty);
+                return RedirectToAction("Faculties");
+            }
+            return NotFound();
+        }
     }
 }

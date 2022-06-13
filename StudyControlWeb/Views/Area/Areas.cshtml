@@ -19,6 +19,7 @@
             <th></th>
             <th></th>
             <th></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -35,6 +36,11 @@
                     </td>
                     <td>
                         <a class="btn btn-secondary btn-sm" asp-action="EditArea" asp-controller="Area" asp-route-id="@a.Id">Изменить</a>
+                    </td>
+                    <td>
+                        <form asp-action="CopyArea" asp-controller="Area" asp-route-id="@a.Id" method="post">
+                            <input type="submit" class="btn btn-primary btn-sm" value="Копировать"/>
+                        </form>
                     </td>
                     <td>
                         <form asp-action="DeleteArea" asp-controller="Area" asp-route-id="@a.Id" method="post">

@@ -14,6 +14,7 @@
             <th>Название</th>
             <th></th>
             <th></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -23,6 +24,11 @@
                     <td>@f.Title</td>
                     <td>
                         <a class="btn btn-secondary btn-sm" asp-action="EditFaculty" asp-controller="Faculty" asp-route-id="@f.Id">Изменить</a>
+                    </td>
+                    <td>
+                        <form asp-action="CopyFaculty" asp-controller="Faculty" asp-route-id="@f.Id" method="post">
+                            <input type="submit" class="btn btn-primary btn-sm" value="Копировать"/>
+                        </form>
                     </td>
                     <td>
                         <form asp-action="DeleteFaculty" asp-controller="Faculty" asp-route-id="@f.Id" method="post">

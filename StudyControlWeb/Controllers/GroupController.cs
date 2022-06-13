@@ -162,6 +162,26 @@ namespace StudyControlWeb.Controllers
             }
             return NotFound();
         }
+        [HttpPost]
+        public IActionResult CopyGroup(int id)
+        {
+            var group = db.Groups.Get(id.ToString());
+            if (group != null)
+            {
+                var copyGroup = new Group()
+                {
+                    Code = group.Code,
+                    DepartmentId = group.DepartmentId,
+                    FacultyId = group.FacultyId,
+                    AreaId = group.AreaId,
+                    StartDate = group.StartDate,
+                };
+
+                db.Groups.Add(copyGroup);
+                return RedirectToAction("Groups");
+            }
+            return NotFound();
+        }
         private IEnumerable<SelectListItem> DepartmentTitles()
         {
             IEnumerable<string> titles = new List<string>();

@@ -13,5 +13,8 @@ namespace StudyControlWeb.Models.DBO
         public string Password { get; set; }
         public int GroupId { get; set; }
         public virtual Group Group { get; set; }
+        public virtual IEnumerable<CurrentAttestation> CurrentAttestationsStudents { get; set; }
+        public virtual IEnumerable<IntermediateAttestation> IntermediateAttestations { get; set; }
+        public virtual IEnumerable<FinalAttestation> FinalAttestations { get; set; }
     }
 }

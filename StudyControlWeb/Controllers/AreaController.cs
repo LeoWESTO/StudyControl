@@ -160,6 +160,41 @@ namespace StudyControlWeb.Controllers
             }
             return NotFound();
         }
+        [HttpPost]
+        public IActionResult CopyArea(int id)
+        {
+            var area = db.Areas.Get(id.ToString());
+            if (area != null)
+            {
+                var copyArea = new Area()
+                {
+                    Code = area.Code,
+                    Title = area.Title,
+                    Profile = area.Profile,
+                    Form = area.Form,
+                    Degree = area.Degree,
+                    DepartmentId = area.DepartmentId,
+                    TermsCount = area.TermsCount,
+                };
+                db.Areas.Add(copyArea);
+
+                foreach (var s in db.Subjects.GetAll().Where(s => s.AreaId == id))
+                {
+                    var copySubject = new Subject()
+                    {
+                        AreaId = copyArea.Id,
+                        Title = s.Title,
+                        TeacherId = s.TeacherId,
+                        TermNumber = s.TermNumber,
+                        ControlTypes = s.ControlTypes,
+                    };
+                    db.Subjects.Add(copySubject);
+                }
+
+                return RedirectToAction("Areas");
+            }
+            return NotFound();
+        }
         private IEnumerable<SelectListItem> Titles()
         {
             IEnumerable<string> titles = new List<string>();
