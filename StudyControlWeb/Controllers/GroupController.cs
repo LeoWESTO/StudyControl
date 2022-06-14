@@ -17,11 +17,12 @@ namespace StudyControlWeb.Controllers
         {
             db = new UniversityRepository(context);
         }
-        public IActionResult Groups()
+        public IActionResult Groups(string search, SortState sortState = SortState.FirstAsc, int page = 1)
         {
+            IEnumerable<GroupViewModel> model = new List<GroupViewModel>();
             if (User.IsInRole("Admin"))
             {
-                var model = db.Groups.GetAll().
+                model = db.Groups.GetAll().
                     Select(g => new GroupViewModel()
                     {
                         Id = g.Id,
@@ -32,11 +33,10 @@ namespace StudyControlWeb.Controllers
                         Profile = string.Join(string.Empty, g.Area.Profile.Split(' ', '-').Select(s => char.ToUpper(s[0]))),
                         StartYear = g.StartDate.Year
                     });
-                return View(model);
             }
             if (User.IsInRole("Faculty"))
             {
-                var model = db.Groups.GetAll().
+                model = db.Groups.GetAll().
                     Where(g => g.FacultyId.ToString() == User.Identity.Name).
                     Select(g => new GroupViewModel()
                     {
@@ -48,11 +48,10 @@ namespace StudyControlWeb.Controllers
                         Profile = string.Join(string.Empty, g.Area.Profile.Split(' ', '-').Select(s => char.ToUpper(s[0]))),
                         StartYear = g.StartDate.Year
                     });
-                return View(model);
             }
             if (User.IsInRole("Department"))
             {
-                var model = db.Groups.GetAll().
+                model = db.Groups.GetAll().
                     Where(g => g.DepartmentId.ToString() == User.Identity.Name).
                     Select(g => new GroupViewModel()
                     {
@@ -64,9 +63,39 @@ namespace StudyControlWeb.Controllers
                         Profile = string.Join(string.Empty, g.Area.Profile.Split(' ', '-').Select(s => char.ToUpper(s[0]))),
                         StartYear = g.StartDate.Year
                     });
-                return View(model);
             }
-            return View();
+
+            //фильтрация
+            if (!String.IsNullOrEmpty(search))
+            {
+                model = model.Where(f => f.Code.ToUpper().Contains(search.ToUpper()));
+                ViewBag.Search = search;
+            }
+
+            //сортировка
+            model = sortState switch
+            {
+                SortState.FirstAsc => model.OrderBy(s => s.Code),
+                SortState.FirstDesc => model.OrderByDescending(s => s.Code),
+                SortState.SecondAsc => model.OrderBy(s => s.Year),
+                SortState.SecondDesc => model.OrderByDescending(s => s.Year),
+                SortState.ThirdAsc => model.OrderBy(s => s.DepartmentTitle),
+                SortState.ThirdDesc => model.OrderByDescending(s => s.DepartmentTitle),
+                SortState.FourthAsc => model.OrderBy(s => s.AreaTitle),
+                SortState.FourthDesc => model.OrderByDescending(s => s.AreaTitle),
+                SortState.FifthAsc => model.OrderBy(s => s.Profile),
+                SortState.FifthDesc => model.OrderByDescending(s => s.Profile),
+                _ => model.OrderBy(s => s.Code),
+            };
+            ViewBag.SortModel = new SortViewModel(sortState);
+
+            //пагинация
+            int count = model.Count();
+            int pageSize = 10;
+            model = model.Skip((page - 1) * pageSize).Take(pageSize);
+            ViewBag.PageModel = new PageViewModel(count, page, pageSize);
+
+            return View(model);
         }
         public IActionResult CreateGroup()
         {

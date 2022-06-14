@@ -7,15 +7,42 @@
         <a class="btn btn-success" asp-action="CreateGroup" asp-controller="Group">Добавить группу</a>
     </div>
     <h3 class="p-3 text-center">Список групп</h3>
-    
+    <form class="row justify-content-end" method="get">
+        <div class="col-3">
+            <input type="text" name="search" placeholder="Поиск" value="@ViewBag.Search" class="form-control" />
+        </div>
+        <div class="col-1">
+            <input type="submit" value="Найти" class="btn btn-outline-dark" />
+        </div>
+    </form>
     <table class="table table-hover">
         <thead class="thead-dark">
         <tr>
-            <th>Код</th>
-            <th>Курс</th>
-            <th>Кафедра</th>
-            <th>Направление</th>
-            <th>Профиль</th>
+            <th>
+                <a asp-action="Groups" 
+                asp-route-sortState="@ViewBag.SortModel.FirstSort"
+                asp-route-search="@(ViewBag.Search)">Код</a>
+            </th>
+            <th>
+                <a asp-action="Groups" 
+                asp-route-sortState="@ViewBag.SortModel.SecondSort"
+                asp-route-search="@(ViewBag.Search)">Курс</a>
+            </th>
+            <th>
+                <a asp-action="Groups" 
+                asp-route-sortState="@ViewBag.SortModel.ThirdSort"
+                asp-route-search="@(ViewBag.Search)">Кафедра</a>
+            </th>
+            <th>
+                <a asp-action="Groups" 
+                asp-route-sortState="@ViewBag.SortModel.FourthSort"
+                asp-route-search="@(ViewBag.Search)">Направление</a>
+            </th>
+            <th>
+                <a asp-action="Groups" 
+                asp-route-sortState="@ViewBag.SortModel.FifthSort"
+                asp-route-search="@(ViewBag.Search)">Профиль</a>
+            </th>
             <th></th>
             <th></th>
             <th></th>
@@ -36,7 +63,7 @@
                         <a class="btn btn-warning btn-sm" asp-action="Attestations" asp-controller="Performance" asp-route-groupId="@g.Id">Успеваемость</a>
                     </td>
                     <td>
-                        <a class="btn btn-primary btn-sm" asp-action="ViewGroup" asp-controller="Group" asp-route-id="@g.Id">Студенты</a>
+                        <a class="btn btn-primary btn-sm" asp-action="Students" asp-controller="Student" asp-route-groupId="@g.Id">Студенты</a>
                     </td>
                     <td>
                         <a class="btn btn-secondary btn-sm" asp-action="EditGroup" asp-controller="Group" asp-route-id="@g.Id">Изменить</a>
@@ -55,4 +82,63 @@
             }
         </tbody>
     </table>
+    <nav>
+        <ul class="pagination">
+            @if (ViewBag.PageModel.HasPreviousPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" 
+                    asp-action="Groups" 
+                    asp-route-sortState="@ViewBag.SortModel.Current"
+                    asp-route-page="@(ViewBag.PageModel.PageNumber-1)"
+                    asp-route-search="@(ViewBag.Search)">Назад</a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled">
+                    <a class="page-link">Назад</a>
+                </li>
+            }
+            @for (int page = 1; page <= ViewBag.PageModel.TotalPages; page++)
+            {
+                if (ViewBag.PageModel.PageNumber == page)
+                {
+                    <li class="page-item active">
+                        <a class="page-link"
+                        asp-action="Groups" 
+                        asp-route-sortState="@ViewBag.SortModel.Current"
+                        asp-route-page="@(page)"
+                        asp-route-search="@(ViewBag.Search)">@(page)</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item">
+                        <a class="page-link"
+                        asp-action="Groups" 
+                        asp-route-sortState="@ViewBag.SortModel.Current"
+                        asp-route-page="@(page)"
+                        asp-route-search="@(ViewBag.Search)">@(page)</a>
+                    </li>
+                }
+            }
+            @if (ViewBag.PageModel.HasNextPage)
+            {
+                <li class="page-item">
+                    <a class="page-link" 
+                    asp-action="Groups" 
+                    asp-route-sortState="@ViewBag.SortModel.Current"
+                    asp-route-page="@(ViewBag.PageModel.PageNumber+1)"
+                    asp-route-search="@(ViewBag.Search)">Вперед</a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item disabled">
+                    <a class="page-link">Вперед</a>
+                </li>
+            }
+        </ul>
+    </nav>
 </div>

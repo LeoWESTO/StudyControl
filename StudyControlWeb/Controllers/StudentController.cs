@@ -17,56 +17,106 @@ namespace StudyControlWeb.Controllers
         {
             db = new UniversityRepository(context);
         }
-        public IActionResult Students()
+        public IActionResult Students(int? groupId, string search, SortState sortState = SortState.FourthAsc, int page = 1)
         {
-            if (User.IsInRole("Admin"))
+            IEnumerable<StudentViewModel> model = new List<StudentViewModel>();
+            if (groupId != null)
             {
-                var model = db.Students.GetAll().
-                    Select(s => new StudentViewModel()
-                    {
-                        Id = s.Id,
-                        Name = s.Name,
-                        Surname = s.Surname,
-                        Fathername = s.Fathername,
-                        GroupCode = s.Group.Code,
-                        Year = DateTime.Now.Year - s.Group.StartDate.Year,
-                        Password = s.Password
-                    });
-                return View(model);
+                var group = db.Groups.Get(groupId.ToString());
+                if (group != null)
+                {
+                    model = group.Students.
+                        Select(s => new StudentViewModel()
+                        {
+                            Id = s.Id,
+                            Name = s.Name,
+                            Surname = s.Surname,
+                            Fathername = s.Fathername,
+                            GroupCode = s.Group.Code,
+                            Year = DateTime.Now.Year - s.Group.StartDate.Year,
+                            Password = s.Password
+                        });
+                }
             }
-            if (User.IsInRole("Faculty"))
+            else
             {
-                var model = db.Students.GetAll().
-                    Where(s => s.Group.Department.FacultyId.ToString() == User.Identity.Name).
-                    Select(s => new StudentViewModel()
-                    {
-                        Id = s.Id,
-                        Name = s.Name,
-                        Surname = s.Surname,
-                        Fathername = s.Fathername,
-                        GroupCode = s.Group.Code,
-                        Year = DateTime.Now.Year - s.Group.StartDate.Year,
-                        Password = s.Password
-                    });
-                return View(model);
+                if (User.IsInRole("Admin"))
+                {
+                    model = db.Students.GetAll().
+                        Select(s => new StudentViewModel()
+                        {
+                            Id = s.Id,
+                            Name = s.Name,
+                            Surname = s.Surname,
+                            Fathername = s.Fathername,
+                            GroupCode = s.Group.Code,
+                            Year = DateTime.Now.Year - s.Group.StartDate.Year,
+                            Password = s.Password
+                        });
+                }
+                if (User.IsInRole("Faculty"))
+                {
+                    model = db.Students.GetAll().
+                        Where(s => s.Group.Department.FacultyId.ToString() == User.Identity.Name).
+                        Select(s => new StudentViewModel()
+                        {
+                            Id = s.Id,
+                            Name = s.Name,
+                            Surname = s.Surname,
+                            Fathername = s.Fathername,
+                            GroupCode = s.Group.Code,
+                            Year = DateTime.Now.Year - s.Group.StartDate.Year,
+                            Password = s.Password
+                        });
+                }
+                if (User.IsInRole("Department"))
+                {
+                    model = db.Students.GetAll().
+                        Where(s => s.Group.DepartmentId.ToString() == User.Identity.Name).
+                        Select(s => new StudentViewModel()
+                        {
+                            Id = s.Id,
+                            Name = s.Name,
+                            Surname = s.Surname,
+                            Fathername = s.Fathername,
+                            GroupCode = s.Group.Code,
+                            Year = DateTime.Now.Year - s.Group.StartDate.Year,
+                            Password = s.Password
+                        });
+                }
             }
-            if (User.IsInRole("Department"))
+
+            //фильтрация
+            if (!String.IsNullOrEmpty(search))
             {
-                var model = db.Students.GetAll().
-                    Where(s => s.Group.DepartmentId.ToString() == User.Identity.Name).
-                    Select(s => new StudentViewModel()
-                    {
-                        Id = s.Id,
-                        Name = s.Name,
-                        Surname = s.Surname,
-                        Fathername = s.Fathername,
-                        GroupCode = s.Group.Code,
-                        Year = DateTime.Now.Year - s.Group.StartDate.Year,
-                        Password = s.Password
-                    });
-                return View(model);
+                model = model.Where(f => (f.Surname + f.Name + f.Fathername).ToUpper().Contains(search.ToUpper()));
+                ViewBag.Search = search;
             }
-            return View();
+
+            //сортировка
+            model = sortState switch
+            {
+                SortState.FirstAsc => model.OrderBy(s => s.Surname),
+                SortState.FirstDesc => model.OrderByDescending(s => s.Surname),
+                SortState.SecondAsc => model.OrderBy(s => s.Name),
+                SortState.SecondDesc => model.OrderByDescending(s => s.Name),
+                SortState.ThirdAsc => model.OrderBy(s => s.Fathername),
+                SortState.ThirdDesc => model.OrderByDescending(s => s.Fathername),
+                SortState.FourthAsc => model.OrderBy(s => s.GroupCode),
+                SortState.FourthDesc => model.OrderByDescending(s => s.GroupCode),
+                SortState.FifthAsc => model.OrderBy(s => s.Year),
+                SortState.FifthDesc => model.OrderByDescending(s => s.Year),
+                _ => model.OrderBy(s => s.GroupCode).ThenBy(s => s.Surname),
+            };
+            ViewBag.SortModel = new SortViewModel(sortState);
+
+            //пагинация
+            int count = model.Count();
+            int pageSize = 10;
+            model = model.Skip((page - 1) * pageSize).Take(pageSize);
+            ViewBag.PageModel = new PageViewModel(count, page, pageSize);
+
+            return View(model);
         }
         public IActionResult CreateStudent()
         {

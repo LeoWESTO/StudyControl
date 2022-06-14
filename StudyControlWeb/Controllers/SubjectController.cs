@@ -16,7 +16,7 @@ namespace StudyControlWeb.Controllers
         {
             db = new UniversityRepository(context);
         }
-        public IActionResult Subjects(int id)
+        public IActionResult Subjects(int id, string search, SortState sortState = SortState.FirstAsc, int page = 1)
         {
             AreaViewModel model = new AreaViewModel();
             var area = db.Areas.Get(id.ToString());
@@ -42,7 +42,36 @@ namespace StudyControlWeb.Controllers
                         TermNumber = s.TermNumber,
                     });
 
-                model.Subjects = subjects.OrderBy(s => s.TermNumber).ToList();
+                //фильтрация
+                if (!String.IsNullOrEmpty(search))
+                {
+                    subjects = subjects.Where(f => f.Title.ToUpper().Contains(search.ToUpper()));
+                    ViewBag.Search = search;
+                }
+
+                //сортировка
+                subjects = sortState switch
+                {
+                    SortState.FirstAsc => subjects.OrderBy(s => s.Title),
+                    SortState.FirstDesc => subjects.OrderByDescending(s => s.Title),
+                    SortState.SecondAsc => subjects.OrderBy(s => s.TermNumber),
+                    SortState.SecondDesc => subjects.OrderByDescending(s => s.TermNumber),
+                    SortState.ThirdAsc => subjects.OrderBy(s => s.ControlTypes),
+                    SortState.ThirdDesc => subjects.OrderByDescending(s => s.ControlTypes),
+                    SortState.FourthAsc => subjects.OrderBy(s => s.TeacherFullName),
+                    SortState.FourthDesc => subjects.OrderByDescending(s => s.TeacherFullName),
+                    _ => subjects.OrderBy(s => s.Title),
+                };
+                ViewBag.SortModel = new SortViewModel(sortState);
+
+                //пагинация
+                int count = subjects.Count();
+                int pageSize = 10;
+                subjects = subjects.Skip((page - 1) * pageSize).Take(pageSize);
+                ViewBag.PageModel = new PageViewModel(count, page, pageSize);
+
+                ViewBag.AreaId = model.Id;
+                model.Subjects = subjects.ToList();
             }
             return View(model);
         }

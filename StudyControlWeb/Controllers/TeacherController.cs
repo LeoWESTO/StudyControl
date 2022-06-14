@@ -5,6 +5,7 @@ using StudyControlWeb.Data;
 using StudyControlWeb.Data.Repositories;
 using StudyControlWeb.Models.DBO;
 using StudyControlWeb.ViewModels;
+using System.Security.Claims;
 
 namespace StudyControlWeb.Controllers
 {
@@ -16,11 +17,12 @@ namespace StudyControlWeb.Controllers
         {
             db = new UniversityRepository(context);
         }
-        public IActionResult Teachers()
+        public IActionResult Teachers(string search, SortState sortState = SortState.FirstAsc, int page = 1)
         {
+            IEnumerable<TeacherViewModel> model = new List<TeacherViewModel>();
             if (User.IsInRole("Admin"))
             {
-                var model = db.Teachers.GetAll().
+                model = db.Teachers.GetAll().
                     Select(s => new TeacherViewModel()
                     {
                         Id = s.Id,
@@ -30,11 +32,10 @@ namespace StudyControlWeb.Controllers
                         DepartmentTitle = s.Department.Title,
                         Password = s.Password
                     });
-                return View(model);
             }
             if (User.IsInRole("Faculty"))
             {
-                var model = db.Teachers.GetAll().
+                model = db.Teachers.GetAll().
                     Where(t => t.Department.FacultyId.ToString() == User.Identity.Name).
                     Select(t => new TeacherViewModel()
                     {
@@ -45,11 +46,10 @@ namespace StudyControlWeb.Controllers
                         DepartmentTitle = t.Department.Title,
                         Password = t.Password
                     });
-                return View(model);
             }
             if (User.IsInRole("Department"))
             {
-                var model = db.Teachers.GetAll().
+                model = db.Teachers.GetAll().
                     Where(t => t.DepartmentId.ToString() == User.Identity.Name).
                     Select(t => new TeacherViewModel()
                     {
@@ -60,9 +60,37 @@ namespace StudyControlWeb.Controllers
                         DepartmentTitle = t.Department.Title,
                         Password = t.Password
                     });
-                return View(model);
             }
-            return View();
+
+            //фильтрация
+            if (!String.IsNullOrEmpty(search))
+            {
+                model = model.Where(f => (f.Surname + f.Name + f.Fathername).ToUpper().Contains(search.ToUpper()));
+                ViewBag.Search = search;
+            }
+
+            //сортировка
+            model = sortState switch
+            {
+                SortState.FirstAsc => model.OrderBy(s => s.Surname),
+                SortState.FirstDesc => model.OrderByDescending(s => s.Surname),
+                SortState.SecondAsc => model.OrderBy(s => s.Name),
+                SortState.SecondDesc => model.OrderByDescending(s => s.Name),
+                SortState.ThirdAsc => model.OrderBy(s => s.Fathername),
+                SortState.ThirdDesc => model.OrderByDescending(s => s.Fathername),
+                SortState.FourthAsc => model.OrderBy(s => s.DepartmentTitle),
+                SortState.FourthDesc => model.OrderByDescending(s => s.DepartmentTitle),
+                _ => model.OrderBy(s => s.Surname),
+            };
+            ViewBag.SortModel = new SortViewModel(sortState);
+
+            //пагинация
+            int count = model.Count();
+            int pageSize = 10;
+            model = model.Skip((page - 1) * pageSize).Take(pageSize);
+            ViewBag.PageModel = new PageViewModel(count, page, pageSize);
+
+            return View(model);
         }
         public IActionResult CreateTeacher()
         {

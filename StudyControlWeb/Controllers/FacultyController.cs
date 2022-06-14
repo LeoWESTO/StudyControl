@@ -15,13 +15,37 @@ namespace StudyControlWeb.Controllers
         {
             db = new UniversityRepository(context);
         }
-        public IActionResult Faculties()
+        public IActionResult Faculties(string search, SortState sortState = SortState.FirstAsc, int page = 1)
         {
-            return View(db.Faculties.GetAll().Select(f => new FacultyViewModel()
+            var model = db.Faculties.GetAll().Select(f => new FacultyViewModel()
             {
                 Id = f.Id,
                 Title = f.Title,
-            }));
+            });
+
+            //фильтрация
+            if (!String.IsNullOrEmpty(search))
+            {
+                model = model.Where(f => f.Title.ToUpper().Contains(search.ToUpper()));
+                ViewBag.Search = search;
+            }
+
+            //сортировка
+            model = sortState switch
+            {
+                SortState.FirstAsc => model.OrderBy(s => s.Title),
+                SortState.FirstDesc => model.OrderByDescending(s => s.Title),
+                _ => model.OrderBy(s => s.Title),
+            };
+            ViewBag.SortModel = new SortViewModel(sortState);
+
+            //пагинация
+            int count = model.Count();
+            int pageSize = 10;
+            model = model.Skip((page - 1) * pageSize).Take(pageSize);
+            ViewBag.PageModel = new PageViewModel(count, page, pageSize);
+
+            return View(model);
         }
         public IActionResult CreateFaculty()
         {

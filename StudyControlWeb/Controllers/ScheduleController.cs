@@ -16,34 +16,61 @@ namespace StudyControlWeb.Controllers
         {
             db = new UniversityRepository(context);
         }
-        public IActionResult Schedules()
+        public IActionResult Schedules(string search, SortState sortState = SortState.FirstAsc, int page = 1)
         {
+            IEnumerable<ScheduleViewModel> model = new List<ScheduleViewModel>();
             if (User.IsInRole("Student"))
             {
                 var groupId = db.Students.Get(User.Identity.Name).GroupId;
-                var model = db.Schedules.GetAll().
-                Where(s => s.GroupId == groupId).
-                Select(s => new ScheduleViewModel()
-                {
-                    Id = s.Id,
-                    GroupCode = s.Group.Code,
-                    FacultyTitle = string.Join(string.Empty, s.Faculty.Title.Split(' ', '-').Select(s => char.ToUpper(s[0]))),
-                    TermNumber = s.TermNumber,
-                });
-                return View(model);
+                model = db.Schedules.GetAll().
+                    Where(s => s.GroupId == groupId).
+                    Select(s => new ScheduleViewModel()
+                    {
+                        Id = s.Id,
+                        GroupCode = s.Group.Code,
+                        FacultyTitle = string.Join(string.Empty, s.Faculty.Title.Split(' ', '-').Select(s => char.ToUpper(s[0]))),
+                        TermNumber = s.TermNumber,
+                    });
             }
             else
             {
-                var model = db.Schedules.GetAll().
-                Select(s => new ScheduleViewModel()
-                {
-                    Id = s.Id,
-                    GroupCode = s.Group.Code,
-                    FacultyTitle = string.Join(string.Empty, s.Faculty.Title.Split(' ', '-').Select(s => char.ToUpper(s[0]))),
-                    TermNumber = s.TermNumber,
-                });
-                return View(model);
+                model = db.Schedules.GetAll().
+                    Select(s => new ScheduleViewModel()
+                    {
+                        Id = s.Id,
+                        GroupCode = s.Group.Code,
+                        FacultyTitle = string.Join(string.Empty, s.Faculty.Title.Split(' ', '-').Select(s => char.ToUpper(s[0]))),
+                        TermNumber = s.TermNumber,
+                    });
             }
+
+            //фильтрация
+            if (!String.IsNullOrEmpty(search))
+            {
+                model = model.Where(f => f.GroupCode.ToUpper().Contains(search.ToUpper()));
+                ViewBag.Search = search;
+            }
+
+            //сортировка
+            model = sortState switch
+            {
+                SortState.FirstAsc => model.OrderBy(s => s.TermNumber),
+                SortState.FirstDesc => model.OrderByDescending(s => s.TermNumber),
+                SortState.SecondAsc => model.OrderBy(s => s.GroupCode),
+                SortState.SecondDesc => model.OrderByDescending(s => s.GroupCode),
+                SortState.ThirdAsc => model.OrderBy(s => s.FacultyTitle),
+                SortState.ThirdDesc => model.OrderByDescending(s => s.FacultyTitle),
+                _ => model.OrderBy(s => s.TermNumber),
+            };
+            ViewBag.SortModel = new SortViewModel(sortState);
+
+            //пагинация
+            int count = model.Count();
+            int pageSize = 10;
+            model = model.Skip((page - 1) * pageSize).Take(pageSize);
+            ViewBag.PageModel = new PageViewModel(count, page, pageSize);
+
+            return View(model);
         }
         [Authorize(Roles = "Admin, Faculty")]
         public IActionResult CreateSchedule()

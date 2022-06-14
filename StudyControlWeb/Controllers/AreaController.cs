@@ -16,7 +16,7 @@ namespace StudyControlWeb.Controllers
         {
             db = new UniversityRepository(context);
         }
-        public IActionResult Areas(int? id)
+        public IActionResult Areas(int? id, string search, SortState sortState = SortState.FirstAsc, int page = 1)
         {
             IEnumerable<AreaViewModel> model;
             if(id == null)
@@ -39,27 +39,60 @@ namespace StudyControlWeb.Controllers
                             Degree.Postgraduate => "Аспирантура",
                         }
                     });
-                return View(model);
             }
-            model = db.Areas.GetAll().
-                Where(a => a.DepartmentId == id).
-                Select(a => new AreaViewModel()
-                {
-                    Id = a.Id,
-                    Code = a.Code,
-                    Title = a.Title,
-                    Profile = string.Join(string.Empty, a.Profile.Split(' ', '-').Select(s => char.ToUpper(s[0]))),
-                    Form = a.Form,
-                    DepartmentTitle = a.Department.Title,
-                    TermsCount = a.TermsCount,
-                    DegreeName = a.Degree switch
+            else
+            {
+                model = db.Areas.GetAll().
+                    Where(a => a.DepartmentId == id).
+                    Select(a => new AreaViewModel()
                     {
-                        Degree.Bachelor => "Бакалавриат",
-                        Degree.Master => "Магистратура",
-                        Degree.Specialist => "Специалитет",
-                        Degree.Postgraduate => "Аспирантура",
-                    }
-                });
+                        Id = a.Id,
+                        Code = a.Code,
+                        Title = a.Title,
+                        Profile = string.Join(string.Empty, a.Profile.Split(' ', '-').Select(s => char.ToUpper(s[0]))),
+                        Form = a.Form,
+                        DepartmentTitle = a.Department.Title,
+                        TermsCount = a.TermsCount,
+                        DegreeName = a.Degree switch
+                        {
+                            Degree.Bachelor => "Бакалавриат",
+                            Degree.Master => "Магистратура",
+                            Degree.Specialist => "Специалитет",
+                            Degree.Postgraduate => "Аспирантура",
+                        }
+                    });
+            }
+            
+            //фильтрация
+            if (!String.IsNullOrEmpty(search))
+            {
+                model = model.Where(a => a.Title.ToUpper().Contains(search.ToUpper()));
+                ViewBag.Search = search;
+            }
+
+            //сортировка
+            model = sortState switch
+            {
+                SortState.FirstAsc => model.OrderBy(s => s.Code),
+                SortState.FirstDesc => model.OrderByDescending(s => s.Code),
+                SortState.SecondAsc => model.OrderBy(s => s.DegreeName),
+                SortState.SecondDesc => model.OrderByDescending(s => s.DegreeName),
+                SortState.ThirdAsc => model.OrderBy(s => s.Title),
+                SortState.ThirdDesc => model.OrderByDescending(s => s.Title),
+                SortState.FourthAsc => model.OrderBy(s => s.Form),
+                SortState.FourthDesc => model.OrderByDescending(s => s.Form),
+                SortState.FifthAsc => model.OrderBy(s => s.DepartmentTitle),
+                SortState.FifthDesc => model.OrderByDescending(s => s.DepartmentTitle),
+                _ => model.OrderBy(s => s.Title),
+            };
+            ViewBag.SortModel = new SortViewModel(sortState);
+
+            //пагинация
+            int count = model.Count();
+            int pageSize = 10;
+            model = model.Skip((page - 1) * pageSize).Take(pageSize);
+            ViewBag.PageModel = new PageViewModel(count, page, pageSize);
+
             return View(model);
         }
         public IActionResult CreateArea()

@@ -16,11 +16,12 @@ namespace StudyControlWeb.Controllers
         {
             db = new UniversityRepository(context);
         }
-        public IActionResult Departments()
+        public IActionResult Departments(string search, SortState sortState = SortState.FirstAsc, int page = 1)
         {
+            IEnumerable<DepartmentViewModel> model = new List<DepartmentViewModel>();
             if (User.IsInRole("Admin"))
             {
-                var model = db.Departments.GetAll().
+                model = db.Departments.GetAll().
                     Select(d => new DepartmentViewModel()
                     {
                         Id = d.Id,
@@ -28,11 +29,10 @@ namespace StudyControlWeb.Controllers
                         FacultyTitle = d.Faculty.Title,
                         Password = d.Password,
                     });
-                return View(model);
             }
             if (User.IsInRole("Faculty"))
             {
-                var model = db.Departments.GetAll().
+                model = db.Departments.GetAll().
                     Where(d => d.FacultyId.ToString() == User.Identity.Name)
                     .Select(d => new DepartmentViewModel()
                     {
@@ -41,9 +41,33 @@ namespace StudyControlWeb.Controllers
                         FacultyTitle = d.Faculty.Title,
                         Password = d.Password,
                     });
-                return View(model);
             }
-            return View();
+
+            //фильтрация
+            if (!String.IsNullOrEmpty(search))
+            {
+                model = model.Where(f => f.Title.ToUpper().Contains(search.ToUpper()));
+                ViewBag.Search = search;
+            }
+
+            //сортировка
+            model = sortState switch
+            {
+                SortState.FirstAsc => model.OrderBy(s => s.Title),
+                SortState.FirstDesc => model.OrderByDescending(s => s.Title),
+                SortState.SecondAsc => model.OrderBy(s => s.FacultyTitle),
+                SortState.SecondDesc => model.OrderByDescending(s => s.FacultyTitle),
+                _ => model.OrderBy(s => s.Title),
+            };
+            ViewBag.SortModel = new SortViewModel(sortState);
+
+            //пагинация
+            int count = model.Count();
+            int pageSize = 10;
+            model = model.Skip((page - 1) * pageSize).Take(pageSize);
+            ViewBag.PageModel = new PageViewModel(count, page, pageSize);
+
+            return View(model);
         }
         public IActionResult CreateDepartment()
         {
