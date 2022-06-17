@@ -5,6 +5,8 @@
         public int Id { get; set; }
         public int ScheduleId { get; set; }
 
+        public string GroupCode { get; set; }
+
         public int WeekNumber { get; set; }
         public int LessonNumber { get; set; }
         public int DayOfWeek { get; set; }

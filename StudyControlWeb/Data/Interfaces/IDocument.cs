@@ -1,12 +1,11 @@
 ﻿using StudyControlWeb.Models.DBO;
+using StudyControlWeb.ViewModels;
 
 namespace StudyControlWeb.Data.Interfaces
 {
     public interface IDocument
     {
-        BaseModel Model { get; set; }
-        public MemoryStream GetWord();
-        public MemoryStream GetExcel();
+        BaseViewModel ViewModel { get; set; }
         public MemoryStream GetWordByPattern(string wordPatternPath);
         public MemoryStream GetExcelByPattern(string excelPatternPath);
     }

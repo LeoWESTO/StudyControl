@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using StudyControlWeb.Data;
+using StudyControlWeb.Data.Documents;
 using StudyControlWeb.Data.Repositories;
 using StudyControlWeb.Models.DBO;
 using StudyControlWeb.ViewModels;
@@ -9,7 +10,7 @@ using System.Security.Claims;
 
 namespace StudyControlWeb.Controllers
 {
-    [Authorize(Roles = "Admin, Faculty, Department")]
+    [Authorize(Roles = "Admin, Faculty, Department, Teacher")]
     public class StudentController : Controller
     {
         private UniversityRepository db;
@@ -118,17 +119,18 @@ namespace StudyControlWeb.Controllers
 
             return View(model);
         }
+        [Authorize(Roles = "Admin, Faculty")]
         public IActionResult CreateStudent()
         {
             ViewBag.Titles = Titles();
             return View();
         }
+        [Authorize(Roles = "Admin, Faculty")]
         [HttpPost]
         public IActionResult CreateStudent(StudentViewModel model)
         {
             var student = new Student()
             {
-                Id = model.Id,
                 Name = model.Name,
                 Surname = model.Surname,
                 Fathername = model.Fathername,
@@ -137,8 +139,43 @@ namespace StudyControlWeb.Controllers
             };
 
             db.Students.Add(student);
+            foreach (var s in student.Group.Area.Subjects)
+            {
+                db.CurrentAttestations.Add(new CurrentAttestation()
+                {
+                     StudentId = student.Id,
+                     SubjectId = s.Id,
+                     Date = DateTime.Now,
+                });
+                db.IntermediateAttestations.Add(new IntermediateAttestation()
+                {
+                    StudentId = student.Id,
+                    SubjectId = s.Id,
+                    Date = DateTime.Now,
+                    ControlType = s.ControlTypes.ToString(),
+                });
+                db.FinalAttestations.Add(new FinalAttestation()
+                {
+                    StudentId = student.Id,
+                    Date = DateTime.Now,
+                    Type = "Препдипломная практика",
+                });
+                db.FinalAttestations.Add(new FinalAttestation()
+                {
+                    StudentId = student.Id,
+                    Date = DateTime.Now,
+                    Type = "Госэкзамен",
+                });
+                db.FinalAttestations.Add(new FinalAttestation()
+                {
+                    StudentId = student.Id,
+                    Date = DateTime.Now,
+                    Type = "ВКР",
+                });
+            }
             return RedirectToAction("Students");
         }
+        [Authorize(Roles = "Admin, Faculty")]
         public IActionResult EditStudent(int? id)
         {
             if (id != null)
@@ -146,6 +183,8 @@ namespace StudyControlWeb.Controllers
                 Student? stu = db.Students.Get(id.ToString());
                 if (stu != null)
                 {
+                    if (User.IsInRole("Faculty") && stu.Group.FacultyId.ToString() != User.Identity.Name) return NotFound();
+
                     var model = new StudentViewModel()
                     {
                         Id = stu.Id,
@@ -162,6 +201,7 @@ namespace StudyControlWeb.Controllers
             }
             return NotFound();
         }
+        [Authorize(Roles = "Admin, Faculty")]
         [HttpPost]
         public IActionResult EditStudent(StudentViewModel model)
         {
@@ -178,17 +218,39 @@ namespace StudyControlWeb.Controllers
             db.Students.Update(student);
             return RedirectToAction("Students");
         }
+        [Authorize(Roles = "Admin, Faculty")]
         [HttpPost]
         public IActionResult DeleteStudent(int? id)
         {
             if (id != null)
             {
+                if (User.IsInRole("Faculty") && db.Students.Get(id.ToString()).Group.FacultyId.ToString() != User.Identity.Name) return NotFound();
                 db.Students.Delete(id.ToString());
                 return RedirectToAction("Students");
             }
             return NotFound();
         }
-
+        public IActionResult DowloadStudentIntermediate(int id)
+        {
+            Student student = db.Students.Get(id.ToString());
+            if (student != null)
+            {
+                var stream = new MemoryStream();
+                stream = new DocumentManager().
+                    GetStudentsIntermediate(new FileInfo("промежуточная успеваемость.docx"), new PerformanceViewModel()
+                    {
+                        Group = student.Group.Code,
+                        StudentFullName = $"{student.Surname} {student.Name} {student.Fathername}",
+                        FacultyTitle = student.Group.Faculty.Title,
+                        DepartmentTitle = student.Group.Department.Title,
+                        IntermediateAttestations = db.IntermediateAttestations.GetAll().Where(i => i.StudentId == id).ToList(),
+                    });
+                return File(stream,
+                            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                            $"{student.Group.Code} {student.Surname} {student.Name} {student.Fathername}.docx");
+            }
+            return NotFound();
+        }
         private IEnumerable<SelectListItem> Titles()
         {
             IEnumerable<string> titles = new List<string>();

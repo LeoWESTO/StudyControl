@@ -32,9 +32,33 @@ namespace StudyControlWeb.Controllers
                         TermNumber = s.TermNumber,
                     });
             }
-            else
+            if (User.IsInRole("Admin"))
             {
                 model = db.Schedules.GetAll().
+                    Select(s => new ScheduleViewModel()
+                    {
+                        Id = s.Id,
+                        GroupCode = s.Group.Code,
+                        FacultyTitle = string.Join(string.Empty, s.Faculty.Title.Split(' ', '-').Select(s => char.ToUpper(s[0]))),
+                        TermNumber = s.TermNumber,
+                    });
+            }
+            if (User.IsInRole("Faculty"))
+            {
+                model = db.Schedules.GetAll().
+                    Where(s => s.FacultyId.ToString() == User.Identity.Name).
+                    Select(s => new ScheduleViewModel()
+                    {
+                        Id = s.Id,
+                        GroupCode = s.Group.Code,
+                        FacultyTitle = string.Join(string.Empty, s.Faculty.Title.Split(' ', '-').Select(s => char.ToUpper(s[0]))),
+                        TermNumber = s.TermNumber,
+                    });
+            }
+            if (User.IsInRole("Department"))
+            {
+                model = db.Schedules.GetAll().
+                    Where(s => s.Group.DepartmentId.ToString() == User.Identity.Name).
                     Select(s => new ScheduleViewModel()
                     {
                         Id = s.Id,
@@ -75,8 +99,9 @@ namespace StudyControlWeb.Controllers
         [Authorize(Roles = "Admin, Faculty")]
         public IActionResult CreateSchedule()
         {
-            ViewBag.Groups = db.Groups.GetAll().Select(g => g.Code).Select(t => new SelectListItem { Text = t, Value = t });
-            ViewBag.Faculties = db.Faculties.GetAll().Select(f => f.Title).Select(t => new SelectListItem { Text = t, Value = t });
+            ViewBag.Groups = GroupCodes();
+            ViewBag.Faculties = FacultyTitles();
+
             return View();
         }
         [Authorize(Roles = "Admin, Faculty")]
@@ -100,6 +125,7 @@ namespace StudyControlWeb.Controllers
                 Schedule? schedule = db.Schedules.Get(id.ToString());
                 if (schedule != null)
                 {
+                    if (User.IsInRole("Faculty") && schedule.FacultyId.ToString() != User.Identity.Name) return NotFound();
                     var model = new ScheduleViewModel()
                     {
                         Id = schedule.Id,
@@ -107,8 +133,9 @@ namespace StudyControlWeb.Controllers
                         FacultyTitle = schedule.Faculty.Title,
                         TermNumber = schedule.TermNumber,
                     };
-                    ViewBag.Groups = db.Groups.GetAll().Select(g => g.Code).Select(t => new SelectListItem { Text = t, Value = t });
-                    ViewBag.Faculties = db.Faculties.GetAll().Select(f => f.Title).Select(t => new SelectListItem { Text = t, Value = t });
+                    ViewBag.Groups = GroupCodes();
+                    ViewBag.Faculties = FacultyTitles();
+
                     return View(model);
                 }
             }
@@ -133,6 +160,7 @@ namespace StudyControlWeb.Controllers
         [HttpPost]
         public IActionResult DeleteSchedule(int id)
         {
+            if (User.IsInRole("Faculty") && db.Schedules.Get(id.ToString()).FacultyId.ToString() != User.Identity.Name) return NotFound();
             db.Schedules.Delete(id.ToString());
             return RedirectToAction("Schedules");
         }
@@ -143,6 +171,8 @@ namespace StudyControlWeb.Controllers
             var schedule = db.Schedules.Get(id.ToString());
             if (schedule != null)
             {
+                if (User.IsInRole("Faculty") && schedule.FacultyId.ToString() != User.Identity.Name) return NotFound();
+
                 var copySchedule = new Schedule()
                 {
                     TermNumber = schedule.TermNumber,
@@ -153,6 +183,33 @@ namespace StudyControlWeb.Controllers
                 return RedirectToAction("Schedules");
             }
             return NotFound();
+        }
+
+        private IEnumerable<SelectListItem> FacultyTitles()
+        {
+            IEnumerable<SelectListItem> list = new List<SelectListItem>();
+            if (User.IsInRole("Admin"))
+            {
+                list = db.Faculties.GetAll().Select(f => f.Title).Select(t => new SelectListItem { Text = t, Value = t });
+            }
+            if (User.IsInRole("Faculty"))
+            {
+                list = db.Faculties.GetAll().Where(f => f.Id.ToString() == User.Identity.Name).Select(f => f.Title).Select(t => new SelectListItem { Text = t, Value = t });
+            }
+            return list;
+        }
+        private IEnumerable<SelectListItem> GroupCodes()
+        {
+            IEnumerable<SelectListItem> list = new List<SelectListItem>();
+            if (User.IsInRole("Admin"))
+            {
+                list = db.Groups.GetAll().Select(g => g.Code).Select(t => new SelectListItem { Text = t, Value = t });
+            }
+            if (User.IsInRole("Faculty"))
+            {
+                list = db.Groups.GetAll().Where(g => g.FacultyId.ToString() == User.Identity.Name).Select(g => g.Code).Select(t => new SelectListItem { Text = t, Value = t });
+            }
+            return list;
         }
     }
 }

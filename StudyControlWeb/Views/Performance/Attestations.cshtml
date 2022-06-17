@@ -16,6 +16,7 @@
     <table class="table table-hover">
         <thead class="thead-dark">
             <tr>
+                <th>Семестр</th>
                 <th>Студент</th>
                 <th>Дисциплина</th>
                 <th>Дата проведения</th>
@@ -29,6 +30,7 @@
             @foreach (var c in Model.CurrentAttestations)
             {
                 <tr>
+                    <td>@c.TermNumber</td>
                     <td>@c.StudentName</td>
                     <td>@c.SubjectTitle</td>
                     <td>@c.Date.ToShortDateString()</td>
@@ -54,6 +56,7 @@
     <table class="table table-hover">
         <thead class="thead-dark">
             <tr>
+                <th>Семестр</th>
                 <th>Студент</th>
                 <th>Дисциплина</th>
                 <th>Вид контроля</th>
@@ -67,6 +70,7 @@
             @foreach (var i in @Model.IntermediateAttestations)
             {
                 <tr>
+                    <td>@i.TermNumber</td>
                     <td>@i.StudentName</td>
                     <td>@i.SubjectTitle</td>
                     <td>@i.ControlType</td>

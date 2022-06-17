@@ -75,6 +75,7 @@ namespace StudyControlWeb.Controllers
             }
             return View(model);
         }
+        [Authorize(Roles = "Admin, Faculty")]
         public IActionResult CreateSubject(int areaId)
         {
             var titles = db.Teachers.GetAll().Select(t => $"{t.Surname} {t.Name} {t.Fathername}");
@@ -84,6 +85,7 @@ namespace StudyControlWeb.Controllers
             ViewBag.Areas = new List<SelectListItem>() { new SelectListItem { Text = areaId.ToString(), Value = areaId.ToString() } };
             return View();
         }
+        [Authorize(Roles = "Admin, Faculty")]
         [HttpPost]
         public IActionResult CreateSubject(SubjectViewModel model, int id)
         {
@@ -106,6 +108,7 @@ namespace StudyControlWeb.Controllers
             db.Subjects.Add(subject);
             return RedirectToAction("Subjects", new { id });
         }
+        [Authorize(Roles = "Admin, Faculty")]
         public IActionResult EditSubject(int id)
         {
             Subject? subject = db.Subjects.Get(id.ToString());
@@ -132,6 +135,7 @@ namespace StudyControlWeb.Controllers
             }
             return NotFound();
         }
+        [Authorize(Roles = "Admin, Faculty")]
         [HttpPost]
         public IActionResult EditSubject(SubjectViewModel model)
         {
@@ -156,6 +160,7 @@ namespace StudyControlWeb.Controllers
             db.Subjects.Update(subject);
             return RedirectToAction("Subjects", new { id });
         }
+        [Authorize(Roles = "Admin, Faculty")]
         [HttpPost]
         public IActionResult DeleteSubject(int id)
         {
@@ -163,6 +168,7 @@ namespace StudyControlWeb.Controllers
             db.Subjects.Delete(id.ToString());
             return RedirectToAction("Subjects", new { id = sub.AreaId });
         }
+        [Authorize(Roles = "Admin, Faculty")]
         [HttpPost]
         public IActionResult CopySubject(int id)
         {

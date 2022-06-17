@@ -31,6 +31,7 @@ namespace StudyControlWeb.Controllers
                     Select(c => new CurrentAttestationViewModel()
                     {
                         Id = c.Id,
+                        TermNumber = c.Subject.TermNumber,
                         StudentName = $"{c.Student.Surname} {c.Student.Name[0]}. {c.Student.Fathername[0]}.",
                         SubjectTitle = c.Subject.Title,
                         Performance = c.Performance,
@@ -42,6 +43,7 @@ namespace StudyControlWeb.Controllers
                     Select(i => new IntermediateAttestationViewModel()
                     {
                         Id = i.Id,
+                        TermNumber = i.Subject.TermNumber,
                         StudentName = $"{i.Student.Surname} {i.Student.Name[0]}. {i.Student.Fathername[0]}.",
                         SubjectTitle = i.Subject.Title,
                         Performance = i.Performance,

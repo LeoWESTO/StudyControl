@@ -95,6 +95,7 @@ namespace StudyControlWeb.Controllers
 
             return View(model);
         }
+        [Authorize(Roles = "Admin")]
         public IActionResult CreateArea()
         {
             ViewBag.Titles = Titles();
@@ -102,6 +103,7 @@ namespace StudyControlWeb.Controllers
             ViewBag.Forms = Forms();
             return View();
         }
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult CreateArea(AreaViewModel model)
         {
@@ -125,6 +127,7 @@ namespace StudyControlWeb.Controllers
             db.Areas.Add(area);
             return RedirectToAction("Areas");
         }
+        [Authorize(Roles = "Admin")]
         public IActionResult EditArea(int? id)
         {
             if (id != null)
@@ -159,6 +162,7 @@ namespace StudyControlWeb.Controllers
             }
             return NotFound();
         }
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult EditArea(AreaViewModel model)
         {
@@ -183,6 +187,7 @@ namespace StudyControlWeb.Controllers
             db.Areas.Update(area);
             return RedirectToAction("Areas");
         }
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult DeleteArea(int id)
         {
@@ -193,6 +198,7 @@ namespace StudyControlWeb.Controllers
             }
             return NotFound();
         }
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult CopyArea(int id)
         {

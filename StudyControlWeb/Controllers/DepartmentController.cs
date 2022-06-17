@@ -88,18 +88,6 @@ namespace StudyControlWeb.Controllers
             db.Departments.Add(department);
             return RedirectToAction("Departments");
         }
-        public IActionResult ViewAreas(int? id)
-        {
-            if (id != null)
-            {
-                var areas = db.Departments.Get(id.ToString()).Areas;
-                if (areas != null)
-                {
-                    return View(areas);
-                }
-            }
-            return NotFound();
-        }
         public IActionResult EditDepartment(int? id)
         {
             if (id != null)
@@ -107,6 +95,8 @@ namespace StudyControlWeb.Controllers
                 Department? dep = db.Departments.Get(id.ToString());
                 if (dep != null)
                 {
+                    if (User.IsInRole("Faculty") && dep.FacultyId.ToString() != User.Identity.Name) return NotFound();
+
                     DepartmentViewModel model = new DepartmentViewModel()
                     {
                         Id = dep.Id,
@@ -139,6 +129,8 @@ namespace StudyControlWeb.Controllers
         {
             if (id != null)
             {
+                if (User.IsInRole("Faculty") && db.Departments.Get(id.ToString()).FacultyId.ToString() != User.Identity.Name) return NotFound();
+
                 db.Departments.Delete(id.ToString());
                 return RedirectToAction("Departments");
             }
@@ -150,6 +142,8 @@ namespace StudyControlWeb.Controllers
             var department = db.Departments.Get(id.ToString());
             if (department != null)
             {
+                if (User.IsInRole("Faculty") && department.FacultyId.ToString() != User.Identity.Name) return NotFound();
+
                 var copyDepartment = new Department()
                 {
                     Title = department.Title,

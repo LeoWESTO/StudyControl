@@ -3,6 +3,7 @@
     public class IntermediateAttestationViewModel
     {
         public int Id { get; set; }
+        public int TermNumber { get; set; }
         public string StudentName { get; set; }
         public string SubjectTitle { get; set; }
         public string ControlType { get; set; }

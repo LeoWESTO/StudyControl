@@ -4,15 +4,40 @@
 }
 
 <div class="container">
-    
-    <div class="container">
-        <div class="alert alert-secondary" role="alert">
-            <div class="text-center m-3">
-                <h3>Добро пожаловать в систему!</h3>
-            </div>
-            <div>
+    <div class="alert alert-secondary m-3" role="alert">
+        <div>
+            <h3 class="text-center m-3">Добро пожаловать в систему сопровождения учебного процесса!</h3>
+            @if (User.IsInRole("Admin"))
+            {
+                <p class="p-3">
+                    <span>Первым делом необходимо настроить систему, выполня следующие шаги:<br /></span>
+                    <span><b>1) </b>Добавьте структурные подразделения университета во вкладках <b>Факультеты</b> и <b>Кафедры</b><br /></span>
+                    <span><b>2) </b>Добавьте профессорско-преподавательский состав во вкладке <b>Преподаватели</b><br /></span>
+                    <span><b>3) </b>Укажите направления подготовки университета во вкладке <b>Направления</b> и добавьте учебные дисциплины для них<br /></span>
+                </p>
+                <p class="p-3">
+                    <span>Затем выдайте пароли от структурных подразделений деканам факультетов и заведующим кафедр<br /></span>
+                </p>
+            }
+            @if (User.IsInRole("Faculty"))
+            {
+                    
+            }
+            @if (User.IsInRole("Department"))
+            {
+                    
+            }
+            @if (User.IsInRole("Teacher"))
+            {
+                    
+            }
+            @if (User.IsInRole("Student"))
+            {
+                    
+            }
+        </div>
+        <div>
 
-            </div>
         </div>
     </div>
 </div>

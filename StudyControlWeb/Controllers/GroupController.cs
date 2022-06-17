@@ -9,7 +9,7 @@ using StudyControlWeb.ViewModels;
 
 namespace StudyControlWeb.Controllers
 {
-    [Authorize(Roles = "Admin, Faculty, Department")]
+    [Authorize(Roles = "Admin, Faculty, Department, Teacher")]
     public class GroupController : Controller
     {
         private UniversityRepository db;
@@ -64,6 +64,21 @@ namespace StudyControlWeb.Controllers
                         StartYear = g.StartDate.Year
                     });
             }
+            if (User.IsInRole("Teacher"))
+            {
+                model = db.Cells.GetAll().
+                    Where(c => c.TeacherId.ToString() == User.Identity.Name).
+                    Select(c => c.Group).Distinct().
+                    Select(g => new GroupViewModel()
+                    {
+                        Code = g.Code,
+                        Year = DateTime.Now.Year - g.StartDate.Year,
+                        DepartmentTitle = g.Department.Title,
+                        AreaTitle = g.Area.Title,
+                        Profile = string.Join(string.Empty, g.Area.Profile.Split(' ', '-').Select(s => char.ToUpper(s[0]))),
+                        StartYear = g.StartDate.Year
+                    });
+            }
 
             //фильтрация
             if (!String.IsNullOrEmpty(search))
@@ -97,6 +112,7 @@ namespace StudyControlWeb.Controllers
 
             return View(model);
         }
+        [Authorize(Roles = "Admin, Faculty")]
         public IActionResult CreateGroup()
         {
             var model = new GroupViewModel() { StartYear = DateTime.Now.Year };
@@ -107,20 +123,7 @@ namespace StudyControlWeb.Controllers
 
             return View(model);
         }
-        public IActionResult ViewGroup(int? id)
-        {
-            var gro = db.Groups.Get(id.ToString());
-            if (gro != null)
-            {
-                var model = new GroupViewModel()
-                {
-                    Code = gro.Code,
-                    Students = db.Students.GetAll().Where(s => s.GroupId == gro.Id).ToList(),
-                };
-                return View(model);
-            }
-            return View();
-        }
+        [Authorize(Roles = "Admin, Faculty")]
         [HttpPost]
         public IActionResult CreateGroup(GroupViewModel model)
         {
@@ -138,6 +141,7 @@ namespace StudyControlWeb.Controllers
             db.Groups.Add(group);
             return RedirectToAction("Groups");
         }
+        [Authorize(Roles = "Admin, Faculty")]
         public IActionResult EditGroup(int? id)
         {
             if (id != null)
@@ -145,6 +149,8 @@ namespace StudyControlWeb.Controllers
                 Group? gro = db.Groups.Get(id.ToString());
                 if (gro != null)
                 {
+                    if (User.IsInRole("Faculty") && gro.FacultyId.ToString() != User.Identity.Name) return NotFound();
+
                     var model = new GroupViewModel()
                     {
                         Id = gro.Id,
@@ -163,6 +169,7 @@ namespace StudyControlWeb.Controllers
             }
             return NotFound();
         }
+        [Authorize(Roles = "Admin, Faculty")]
         [HttpPost]
         public IActionResult EditGroup(GroupViewModel model)
         {
@@ -181,22 +188,28 @@ namespace StudyControlWeb.Controllers
             db.Groups.Update(group);
             return RedirectToAction("Groups");
         }
+        [Authorize(Roles = "Admin, Faculty")]
         [HttpPost]
         public IActionResult DeleteGroup(int? id)
         {
             if (id != null)
             {
+                if (User.IsInRole("Faculty") && db.Groups.Get(id.ToString()).FacultyId.ToString() != User.Identity.Name) return NotFound();
+
                 db.Groups.Delete(id.ToString());
                 return RedirectToAction("Groups");
             }
             return NotFound();
         }
+        [Authorize(Roles = "Admin, Faculty")]
         [HttpPost]
         public IActionResult CopyGroup(int id)
         {
             var group = db.Groups.Get(id.ToString());
             if (group != null)
             {
+                if (User.IsInRole("Faculty") && group.FacultyId.ToString() != User.Identity.Name) return NotFound();
+
                 var copyGroup = new Group()
                 {
                     Code = group.Code,

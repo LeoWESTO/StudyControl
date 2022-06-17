@@ -16,12 +16,17 @@ namespace StudyControlWeb.Controllers
         {
             db = new UniversityRepository(context);
         }
+        [Authorize (Roles = "Admin, Faculty, Department, Student")]
         public IActionResult Cells(int scheduleId)
         {
             ScheduleViewModel model = new ScheduleViewModel();
             var schedule = db.Schedules.Get(scheduleId.ToString());
             if (schedule != null)
             {
+                if (User.IsInRole("Faculty") && schedule.FacultyId.ToString() != User.Identity.Name) return NotFound();
+                if (User.IsInRole("Department") && schedule.FacultyId != db.Departments.Get(User.Identity.Name).FacultyId) return NotFound();
+                if (User.IsInRole("Student") && schedule.GroupId != db.Students.Get(User.Identity.Name).GroupId) return NotFound();
+
                 model = new ScheduleViewModel()
                 {
                     Id = scheduleId,
@@ -49,14 +54,47 @@ namespace StudyControlWeb.Controllers
             }
             return View(model);
         }
+        [Authorize (Roles = "Teacher")]
+        public IActionResult CellsTeacher()
+        {
+            var teacher = db.Teachers.Get(User.Identity.Name);
+            if (teacher != null)
+            {
+                var model = db.Cells.GetAll().
+                    Where(c => c.TeacherId == teacher.Id).
+                    Select(c => new CellViewModel()
+                    {
+                        GroupCode = c.Group.Code,
+                        TeacherName = $"{c.Teacher.Surname} {c.Teacher.Name[0]}. {c.Teacher.Fathername[0]}.",
+                        Classroom = c.Classroom,
+                        SubjectTitle = c.Subject.Title,
+                        LessonType = c.LessonType,
+                        LessonNumber = c.LessonNumber,
+                        DayOfWeek = c.DayOfWeek,
+                        WeekNumber = c.WeekNumber,
+                        ControlType = c.Subject.ControlTypes.Length > 2 ? c.Subject.ControlTypes[0..(c.Subject.ControlTypes.Length - 2)] : "",
+                    });
+
+                ViewBag.TeacherFullName = $"{teacher.Surname} {teacher.Name[0]}. {teacher.Fathername[0]}.";
+
+                return View(model);
+            }
+            return NotFound();
+        }
         [Authorize(Roles = "Admin, Faculty")]
         public IActionResult CreateCell(int scheduleId)
         {
             var schedule = db.Schedules.Get(scheduleId.ToString());
-            ViewBag.Subjects = schedule.Group.Area.Subjects.Where(s => s.TermNumber == schedule.TermNumber).Select(s => s.Title).Select(t => new SelectListItem { Text = t, Value = t });
-            ViewBag.LessonType = new List<string>() { "ЛК", "ПЗ", "ЛБ", "КР", "Консультация", "Экзамен" }.Select(t => new SelectListItem { Text = t, Value = t });
-            ViewBag.ScheduleId = new List<SelectListItem>() { new SelectListItem { Text = scheduleId.ToString(), Value = scheduleId.ToString() } };
-            return View();
+            if(schedule != null)
+            {
+                if (User.IsInRole("Faculty") && schedule.FacultyId.ToString() != User.Identity.Name) return NotFound();
+
+                ViewBag.Subjects = schedule.Group.Area.Subjects.Where(s => s.TermNumber == schedule.TermNumber).Select(s => s.Title).Select(t => new SelectListItem { Text = t, Value = t });
+                ViewBag.LessonType = new List<string>() { "ЛК", "ПЗ", "ЛБ", "КР", "Консультация", "Экзамен" }.Select(t => new SelectListItem { Text = t, Value = t });
+                ViewBag.ScheduleId = new List<SelectListItem>() { new SelectListItem { Text = scheduleId.ToString(), Value = scheduleId.ToString() } };
+                return View();
+            }
+            return NotFound();
         }
         [Authorize(Roles = "Admin, Faculty")]
         [HttpPost]
@@ -83,6 +121,8 @@ namespace StudyControlWeb.Controllers
             Cell? cell = db.Cells.Get(id.ToString());
             if (cell != null)
             {
+                if (User.IsInRole("Faculty") && cell.Schedule.FacultyId.ToString() != User.Identity.Name) return NotFound();
+
                 var model = new CellViewModel()
                 {
                     Id = cell.Id,
@@ -96,8 +136,7 @@ namespace StudyControlWeb.Controllers
                     WeekNumber = cell.WeekNumber,
                 };
 
-                var schedule = db.Schedules.Get(cell.ScheduleId.ToString());
-                ViewBag.Subjects = schedule.Group.Area.Subjects.Where(s => s.TermNumber == schedule.TermNumber).Select(s => s.Title).Select(t => new SelectListItem { Text = t, Value = t });
+                ViewBag.Subjects = cell.Schedule.Group.Area.Subjects.Where(s => s.TermNumber == cell.Schedule.TermNumber).Select(s => s.Title).Select(t => new SelectListItem { Text = t, Value = t });
                 ViewBag.LessonType = new List<string>() { "ЛК", "ПЗ", "ЛБ", "КР", "Консультация", "Экзамен" }.Select(t => new SelectListItem { Text = t, Value = t });
                 ViewBag.ScheduleId = new List<SelectListItem>() { new SelectListItem { Text = cell.ScheduleId.ToString(), Value = cell.ScheduleId.ToString() } };
 
@@ -131,6 +170,8 @@ namespace StudyControlWeb.Controllers
         public IActionResult DeleteCell(int id)
         {
             var cell = db.Cells.Get(id.ToString());
+            if (User.IsInRole("Faculty") && cell.Schedule.FacultyId.ToString() != User.Identity.Name) return NotFound();
+
             db.Cells.Delete(id.ToString());
             return RedirectToAction("Cells", new { scheduleId = cell.ScheduleId });
         }
@@ -141,6 +182,8 @@ namespace StudyControlWeb.Controllers
             var cell = db.Cells.Get(id.ToString());
             if (cell != null)
             {
+                if (User.IsInRole("Faculty") && cell.Schedule.FacultyId.ToString() != User.Identity.Name) return NotFound();
+
                 var copyCell = new Cell()
                 {
                     ScheduleId = cell.ScheduleId,

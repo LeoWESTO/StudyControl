@@ -3,9 +3,12 @@
     
 }
 <div class="container">
-    <div class="col p-3">
-        <a class="btn btn-success" asp-action="CreateGroup" asp-controller="Group">Добавить группу</a>
-    </div>
+    @if (User.IsInRole("Admin") || User.IsInRole("Faculty"))
+    {
+        <div class="col p-3">
+            <a class="btn btn-success" asp-action="CreateGroup" asp-controller="Group">Добавить группу</a>
+        </div>
+    }
     <h3 class="p-3 text-center">Список групп</h3>
     <form class="row justify-content-end" method="get">
         <div class="col-3">
@@ -65,19 +68,22 @@
                     <td>
                         <a class="btn btn-primary btn-sm" asp-action="Students" asp-controller="Student" asp-route-groupId="@g.Id">Студенты</a>
                     </td>
-                    <td>
-                        <a class="btn btn-secondary btn-sm" asp-action="EditGroup" asp-controller="Group" asp-route-id="@g.Id">Изменить</a>
-                    </td>
-                    <td>
-                        <form asp-action="CopyGroup" asp-controller="Group" asp-route-id="@g.Id" method="post">
-                            <input type="submit" class="btn btn-primary btn-sm" value="Копировать"/>
-                        </form>
-                    </td>
-                    <td>
-                        <form asp-action="DeleteGroup" asp-controller="Group" asp-route-id="@g.Id" method="post">
-                            <input type="submit" class="btn btn-danger btn-sm" value="Удалить"/>
-                        </form>
-                    </td>
+                    @if (User.IsInRole("Admin") || User.IsInRole("Faculty"))
+                    {
+                        <td>
+                            <a class="btn btn-secondary btn-sm" asp-action="EditGroup" asp-controller="Group" asp-route-id="@g.Id">Изменить</a>
+                        </td>
+                        <td>
+                            <form asp-action="CopyGroup" asp-controller="Group" asp-route-id="@g.Id" method="post">
+                                <input type="submit" class="btn btn-primary btn-sm" value="Копировать"/>
+                            </form>
+                        </td>
+                        <td>
+                            <form asp-action="DeleteGroup" asp-controller="Group" asp-route-id="@g.Id" method="post">
+                                <input type="submit" class="btn btn-danger btn-sm" value="Удалить"/>
+                            </form>
+                        </td>
+                    }
                 </tr>
             }
         </tbody>

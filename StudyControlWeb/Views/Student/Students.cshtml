@@ -1,11 +1,14 @@
 ﻿@model IEnumerable<StudyControlWeb.ViewModels.StudentViewModel>
 @{
-    
+
 }
 <div class="container">
-    <div class="col p-3">
-        <a class="btn btn-success" asp-action="CreateStudent" asp-controller="Student">Добавить студента</a>
-    </div>
+    @if (User.IsInRole("Admin") || User.IsInRole("Faculty"))
+    {
+        <div class="col p-3">
+            <a class="btn btn-success" asp-action="CreateStudent" asp-controller="Student">Добавить студента</a>
+        </div>
+    }
     <h3 class="p-3 text-center">Список студентов</h3>
     <form class="row justify-content-end" method="get">
         <div class="col-3">
@@ -45,6 +48,7 @@
             </th>
             <th></th>
             <th></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -56,14 +60,20 @@
                     <td>@s.Fathername</td>
                     <td>@s.GroupCode</td>
                     <td>@s.Year</td>
-                    <td>
-                        <a class="btn btn-secondary btn-sm" asp-action="EditStudent" asp-controller="Student" asp-route-id="@s.Id">Изменить</a>
-                    </td>
-                    <td>
-                        <form asp-action="DeleteStudent" asp-controller="Student" asp-route-id="@s.Id" method="post">
-                            <input type="submit" class="btn btn-danger btn-sm" value="Удалить"/>
-                        </form>
-                    </td>
+                    @if (User.IsInRole("Admin") || User.IsInRole("Faculty"))
+                    {
+                        <td>
+                            <a class="btn btn-primary btn-sm" asp-action="DowloadStudentIntermediate" asp-controller="Student" asp-route-id="@s.Id">Выгрузить успеваемость</a>
+                        </td>
+                        <td>
+                            <a class="btn btn-secondary btn-sm" asp-action="EditStudent" asp-controller="Student" asp-route-id="@s.Id">Изменить</a>
+                        </td>
+                        <td>
+                            <form asp-action="DeleteStudent" asp-controller="Student" asp-route-id="@s.Id" method="post">
+                                <input type="submit" class="btn btn-danger btn-sm" value="Удалить"/>
+                            </form>
+                        </td>
+                    }
                 </tr>
             }
         </tbody>

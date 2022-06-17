@@ -12,10 +12,11 @@
     };
 }
 <div class="container">
-    @if(User.IsInRole("Admin") || User.IsInRole("Faculty"))
+    @if (User.IsInRole("Admin") || User.IsInRole("Faculty"))
     {
         <div class="col p-3">
             <a class="btn btn-success" asp-action="CreateCell" asp-controller="Cell", asp-route-ScheduleId="@Model.Id">Добавить пару</a>
+            <a class="btn btn-success" asp-action="DownloadTimetable" asp-controller="Cell", asp-route-ScheduleId="@Model.Id">Выгрузить распиасание</a>
         </div>  
     }
     <h3 class="p-3 text-center">Список пар группы @Model.GroupCode (@Model.TermNumber семестр)</h3>
@@ -41,7 +42,7 @@
                                     @c.LessonType 
                                     @c.TeacherName<br>
                                     Аудитория: @c.Classroom<br>
-                                    @if(User.IsInRole("Admin") || User.IsInRole("Faculty"))
+                                    @if (User.IsInRole("Admin") || User.IsInRole("Faculty"))
                                     {
                                         <a class="btn btn-secondary btn-sm" asp-action="EditCell" asp-controller="Cell" asp-route-id="@c.Id">Изменить</a>
                                         <form asp-action="CopyCell" asp-controller="Cell" asp-route-id="@c.Id" method="post">

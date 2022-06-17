@@ -1,0 +1,47 @@
+﻿@model IEnumerable<StudyControlWeb.ViewModels.CellViewModel>
+@{
+    var daysofweek = new Dictionary<int, string>()
+    {
+        {1, "Понедельник"},
+        {2, "Вторник"},
+        {3, "Среда"},
+        {4, "Четверг"},
+        {5, "Пятница"},
+        {6, "Суббота"},
+        {7, "Воскресенье"},
+    };
+}
+<div class="container">
+    <h3 class="p-3 text-center">Список пар преподавателя @ViewBag.TeacherFullName</h3>
+    @if (Model.Count() > 0)
+    {
+        var maxLesson = Model.Select(c => c.LessonNumber).Max();
+        @for (int week = 1; week <= Model.Select(c => c.WeekNumber).Max(); week++)
+        {
+            <div class="p-2">
+                <h4>Неделя @week</h4>
+                @for (int day = 1; day <= 7; day++)
+                {
+                    <span>@daysofweek[day]</span>
+                    <ul class="list-group container">
+                        @foreach (var c in Model.Where(c => c.WeekNumber == week && c.DayOfWeek == day).OrderBy(c => c.LessonNumber))
+                        {
+                            <li class="list-group-item row">
+                                <div class="col">
+                                    @c.LessonNumber пара
+                                </div>
+                                <div class="col">
+                                    @c.GroupCode<br>
+                                    @c.SubjectTitle (@c.ControlType)<br>
+                                    @c.LessonType<br>
+                                    Аудитория: @c.Classroom<br>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        }
+    }
+    
+</div>
