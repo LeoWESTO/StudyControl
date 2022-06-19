@@ -72,6 +72,7 @@ namespace StudyControlWeb.Controllers
                         SubjectTitle = c.Subject.Title,
                         Performance = c.Performance,
                         Attendance = c.Attendance,
+                        TermNumber = c.Subject.TermNumber,
                         Date = c.Date,
                     }).ToList();
                 intermediates = db.IntermediateAttestations.GetAll().
@@ -82,6 +83,7 @@ namespace StudyControlWeb.Controllers
                         SubjectTitle = i.Subject.Title,
                         Performance = i.Performance,
                         ControlType = i.ControlType,
+                        TermNumber = i.Subject.TermNumber,
                         Date = i.Date,
                     }).ToList();
                 finales = db.FinalAttestations.GetAll().
@@ -194,13 +196,15 @@ namespace StudyControlWeb.Controllers
         public IActionResult CreateIntermediateAttestation(IntermediateAttestationViewModel model, int groupId)
         {
             var group = db.Groups.Get(groupId.ToString());
+            var sub = group.Area.Subjects.FirstOrDefault(s => s.Title == model.SubjectTitle);
             var intermediateAttestation = new IntermediateAttestation()
             {
                 StudentId = group.Students.FirstOrDefault(s => s.Surname == model.StudentName.Split(" ")[0] &&
                                                                         s.Name == model.StudentName.Split(" ")[1] &&
                                                                         s.Fathername == model.StudentName.Split(" ")[2]).Id,
-                SubjectId = group.Area.Subjects.FirstOrDefault(s => s.Title == model.SubjectTitle).Id,
+                SubjectId = sub.Id,
                 Performance = model.Performance,
+                ControlType = sub.ControlTypes.Length > 2 ? sub.ControlTypes[0..(sub.ControlTypes.Length - 2)] : "",
                 Date = model.Date,
             };
 

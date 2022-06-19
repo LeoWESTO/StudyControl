@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using StudyControlWeb.Data.Interfaces;
-using StudyControlWeb.Models;
+﻿using StudyControlWeb.Data.Interfaces;
 using StudyControlWeb.Models.DBO;
 
 namespace StudyControlWeb.Data.Repositories

@@ -8,7 +8,7 @@ namespace StudyControlWeb.ViewModels
         public string FacultyTitle { get; set; }
         public string DepartmentTitle { get; set; }
         public string StudentFullName { get; set; }
-        public List<StudyYear> StudyYears { get; set; }
+        //public List<StudyYear> StudyYears { get; set; }
         public List<IntermediateAttestation> IntermediateAttestations { get; set; }
     }
 }

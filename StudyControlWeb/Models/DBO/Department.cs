@@ -13,5 +13,6 @@ namespace StudyControlWeb.Models.DBO
         public virtual Faculty Faculty { get; set; }
         public virtual IEnumerable<Group> Groups { get; set; }
         public virtual IEnumerable<Area> Areas { get; set; }
+        public virtual IEnumerable<Teacher> Teachers { get; set; }
     }
 }
